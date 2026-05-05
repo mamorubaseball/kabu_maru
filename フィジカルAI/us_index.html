@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【米国版】フィジカルAI 関連銘柄ダッシュボード</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a; --surface: rgba(30, 41, 59, 0.7);
+            --primary: #3b82f6; --accent: #10b981;
+            --text-main: #f8fafc; --text-muted: #cbd5e1; --border: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed; color: var(--text-main); line-height: 1.6; padding-bottom: 50px;
+        }
+        header { padding: 40px 20px; text-align: center; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(to right, #f87171, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .category-nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 30px 0; }
+        .nav-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; text-decoration: none; transition: all 0.3s ease; font-size: 0.9rem; font-weight: 500; }
+        .nav-btn:hover { background: rgba(239, 68, 68, 0.2); color: white; border-color: rgba(239, 68, 68, 0.5); transform: translateY(-2px); }
+        .category-section { margin-bottom: 60px; scroll-margin-top: 150px; }
+        .category-title { font-size: 1.8rem; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 2px solid rgba(239, 68, 68, 0.3); display: inline-block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .card { background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 16px; padding: 25px; transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, #ef4444, #3b82f6); opacity: 0; transition: opacity 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.2); }
+        .card:hover::before { opacity: 1; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .stock-name { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 5px; }
+        .stock-code { font-family: 'Inter', sans-serif; color: #94a3b8; font-size: 0.9rem; background: rgba(255, 255, 255, 0.1); padding: 2px 8px; border-radius: 4px; }
+        .badge-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .badge { font-size: 0.8rem; font-weight: 600; padding: 4px 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .badge.rating-buy { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
+        .badge.rating-strong { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+        .badge.rating-hold { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+        .card-body { flex-grow: 1; }
+        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 8px 0; font-size: 0.9rem; }
+        .stat-label { color: var(--text-muted); }
+        .stat-val { font-weight: 600; }
+        .growth-pos { color: #34d399; }
+        .growth-neg { color: #f87171; }
+        .desc { margin-top: 15px; font-size: 0.9rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; border-left: 2px solid rgba(255, 255, 255, 0.1); }
+        
+        .ai-eval { margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; position: relative; overflow: hidden; }
+        .ai-eval::before { content: 'AIの投資評価'; position: absolute; top: 0; left: 0; background: linear-gradient(to right, #ef4444, #3b82f6); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 10px; border-bottom-right-radius: 8px; }
+        .ai-eval-content { margin-top: 10px; font-size: 1.1rem; font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 10px; justify-content: center; }
+        .ai-icon { font-size: 1.5rem; }
+        .highlight { color: #f87171; font-size: 1.3rem; margin: 0 4px; }
+        .card-footer { margin-top: 20px; }
+        .link-btn { display: block; text-align: center; background: rgba(255, 255, 255, 0.05); color: white; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .link-btn:hover { background: rgba(239, 68, 68, 0.8); border-color: rgba(239, 68, 68, 0.8); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { animation: fadeIn 0.5s ease backwards; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>US Physical AI Stocks</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem;">【米国版】フィジカルAI・ロボティクス関連銘柄の最新ダッシュボード（AI評価付き）</p>
+    <div class="category-nav" id="nav-container">
+        <a href="#cat-0" class="nav-btn">1. AI開発・導入</a>\n<a href="#cat-1" class="nav-btn">2. センシングなど独自技術</a>\n<a href="#cat-2" class="nav-btn">3. ロボット本体・アーム</a>\n<a href="#cat-3" class="nav-btn">4. 開発支援・実用化技術</a>\n<a href="#cat-4" class="nav-btn">5. 基幹部品</a>\n<a href="#cat-5" class="nav-btn">6. その他部品</a>\n
+    </div>
+</header>
+<div class="container" id="main-content">
+    
+    <div class="category-section" id="cat-0">
+        <h2 class="category-title">1. AI開発・導入</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">パランティア</div>
+                        <div class="stock-code">PLTR</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 330.7億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+70.0%</span>/益<span class="growth-pos">+647.6%</span></span>
+                    </div>
+                    <div class="desc">ビッグデータ解析とAIプラットフォームを政府・民間向けに提供。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+45%</span> / 勝率<span class="highlight">78%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/PLTR" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">C3.ai</div>
+                        <div class="stock-code">AI</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 1.3億ドル</span>
+                    
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-neg">-46.1%</span></span>
+                    </div>
+                    <div class="desc">エンタープライズ向けAIアプリケーション構築プラットフォーム。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+10%</span> / 勝率<span class="highlight">48%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/AI" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">UiPath</div>
+                        <div class="stock-code">PATH</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 5.4億ドル</span>
+                    <span class="badge rating-hold">中立</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+13.6%</span>/益<span class="growth-pos">+105.7%</span></span>
+                    </div>
+                    <div class="desc">RPA（ロボティック・プロセス・オートメーション）の世界最大手。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+34%</span> / 勝率<span class="highlight">59%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/PATH" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">マイクロソフト</div>
+                        <div class="stock-code">MSFT</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 3.2兆ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+16.7%</span>/益<span class="growth-pos">+59.8%</span></span>
+                    </div>
+                    <div class="desc">クラウド基盤AzureとOpenAI連携によるAIソリューション展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+55%</span> / 勝率<span class="highlight">84%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/MSFT" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">アルファベット</div>
+                        <div class="stock-code">GOOGL</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 4.2兆ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+18.0%</span>/益<span class="growth-pos">+31.1%</span></span>
+                    </div>
+                    <div class="desc">AI研究の世界的リーダー、自動運転Waymoなども傘下に持つ。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+54%</span> / 勝率<span class="highlight">88%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/GOOGL" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">メタ</div>
+                        <div class="stock-code">META</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 1.7兆ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+23.8%</span>/益<span class="growth-pos">+10.7%</span></span>
+                    </div>
+                    <div class="desc">オープンソースAI（Llama）やVR/メタバース技術に注力。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+50%</span> / 勝率<span class="highlight">83%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/META" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-1">
+        <h2 class="category-title">2. センシングなど独自技術</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">コグネックス</div>
+                        <div class="stock-code">CGNX</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 8.9億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+9.9%</span>/益<span class="growth-pos">+18.0%</span></span>
+                    </div>
+                    <div class="desc">マシンビジョン（産業用画像処理システム）の世界的トップ企業。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+48%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/CGNX" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">アンバレラ</div>
+                        <div class="stock-code">AMBA</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 2.9億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+20.1%</span></span>
+                    </div>
+                    <div class="desc">AIビジョンプロセッサ。自動運転やセキュリティカメラ向け半導体。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+37%</span> / 勝率<span class="highlight">76%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/AMBA" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ルメンタム</div>
+                        <div class="stock-code">LITE</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 61.3億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+65.5%</span></span>
+                    </div>
+                    <div class="desc">3Dセンシング向けレーザー（VCSEL）など光通信部品の先駆者。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+36%</span> / 勝率<span class="highlight">73%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/LITE" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">コヒレント</div>
+                        <div class="stock-code">COHR</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 57.2億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+17.5%</span>/益<span class="growth-pos">+73.0%</span></span>
+                    </div>
+                    <div class="desc">レーザー技術と光学部品。半導体製造や各種センシングに強み。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+45%</span> / 勝率<span class="highlight">80%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/COHR" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">オースター</div>
+                        <div class="stock-code">OUST</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 1.6億ドル</span>
+                    
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+106.6%</span></span>
+                    </div>
+                    <div class="desc">デジタルLiDARセンサーを製造。ロボティクスや自動車向けに提供。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+27%</span> / 勝率<span class="highlight">62%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/OUST" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ルミナー</div>
+                        <div class="stock-code">LAZR</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: -</span>
+                    
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">-</span>
+                    </div>
+                    <div class="desc">自動運転車向けの高性能LiDAR技術とソフトウェアを開発。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+19%</span> / 勝率<span class="highlight">55%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/LAZR" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">モービルアイ</div>
+                        <div class="stock-code">MBLY</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 7.4億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+27.4%</span></span>
+                    </div>
+                    <div class="desc">自動運転システムとADAS（先進運転支援システム）の世界最大手。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+40%</span> / 勝率<span class="highlight">78%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/MBLY" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-2">
+        <h2 class="category-title">3. ロボット本体・アーム</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">テスラ</div>
+                        <div class="stock-code">TSLA</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 1.4兆ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+15.8%</span>/益<span class="growth-pos">+8.3%</span></span>
+                    </div>
+                    <div class="desc">EV最大手。ヒト型ロボット「Optimus」や完全自動運転（FSD）を開発。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+45%</span> / 勝率<span class="highlight">79%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/TSLA" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">インテュイティブ・サージカル</div>
+                        <div class="stock-code">ISRG</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 160.7億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+23.0%</span>/益<span class="growth-pos">+18.8%</span></span>
+                    </div>
+                    <div class="desc">手術支援ロボット「ダヴィンチ」を開発する医療用ロボットの絶対的王者。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+49%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ISRG" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">シンボティック</div>
+                        <div class="stock-code">SYM</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 34.5億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+29.4%</span></span>
+                    </div>
+                    <div class="desc">AIを活用した倉庫向け自律型ロボットシステムを提供。ウォルマートと提携。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+36%</span> / 勝率<span class="highlight">72%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/SYM" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ロックウェル</div>
+                        <div class="stock-code">ROK</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 45.0億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+11.9%</span>/益<span class="growth-pos">+67.1%</span></span>
+                    </div>
+                    <div class="desc">産業用オートメーション機器および情報ソリューションの世界的企業。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+43%</span> / 勝率<span class="highlight">80%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ROK" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">iRobot</div>
+                        <div class="stock-code">IRBT</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: -</span>
+                    
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">-</span>
+                    </div>
+                    <div class="desc">家庭用ロボット掃除機「ルンバ」を展開する消費者向けロボット大手。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+17%</span> / 勝率<span class="highlight">57%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/IRBT" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ジョビー</div>
+                        <div class="stock-code">JOBY</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 8.6億ドル</span>
+                    <span class="badge rating-hold">中立</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+55965.5%</span></span>
+                    </div>
+                    <div class="desc">eVTOL（電動垂直離着陸機）いわゆる空飛ぶクルマのリーディングカンパニー。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+19%</span> / 勝率<span class="highlight">57%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/JOBY" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">アーチャー</div>
+                        <div class="stock-code">ACHR</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 4.2億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">-</span>
+                    </div>
+                    <div class="desc">都市型航空モビリティ向けeVTOLを開発。ステランティス等と提携。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+28%</span> / 勝率<span class="highlight">73%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ACHR" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">テラダイン</div>
+                        <div class="stock-code">TER</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 48.0億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+43.9%</span>/益<span class="growth-pos">+81.4%</span></span>
+                    </div>
+                    <div class="desc">半導体自動テスト装置の最大手であり、協働ロボット（UR）も傘下に持つ。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+48%</span> / 勝率<span class="highlight">83%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/TER" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">テレダイン</div>
+                        <div class="stock-code">TDY</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 29.2億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+7.6%</span>/益<span class="growth-pos">+21.6%</span></span>
+                    </div>
+                    <div class="desc">航空宇宙・防衛向け機器およびマシンビジョン用デジタルカメラを展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+46%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/TDY" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ディア</div>
+                        <div class="stock-code">DE</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 151.3億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-neg">-11.1%</span>/益<span class="growth-neg">-8.5%</span></span>
+                    </div>
+                    <div class="desc">世界最大の農機メーカー。完全自律走行トラクターなどスマート農業を推進。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+16%</span> / 勝率<span class="highlight">51%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/DE" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">キャタピラー</div>
+                        <div class="stock-code">CAT</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 376.9億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+18.0%</span>/益<span class="growth-neg">-11.4%</span></span>
+                    </div>
+                    <div class="desc">建設・鉱山機械の世界最大手。重機の自律化・自動化に積極的に投資。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+31%</span> / 勝率<span class="highlight">65%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/CAT" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">オシュコシュ</div>
+                        <div class="stock-code">OSK</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 9.2億ドル</span>
+                    
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+3.5%</span>/益<span class="growth-neg">-10.1%</span></span>
+                    </div>
+                    <div class="desc">特装車・軍用車両メーカー。ゴミ収集車などの自動化や電動化を推進。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+18%</span> / 勝率<span class="highlight">47%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/OSK" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">テレックス</div>
+                        <div class="stock-code">TEX</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6.9億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+6.2%</span></span>
+                    </div>
+                    <div class="desc">高所作業車やクレーンなどの産業用機械を製造。製品のスマート化を図る。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+34%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/TEX" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-3">
+        <h2 class="category-title">4. 開発支援・実用化技術</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">NVIDIA</div>
+                        <div class="stock-code">NVDA</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 5.1兆ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+73.2%</span>/益<span class="growth-pos">+95.6%</span></span>
+                    </div>
+                    <div class="desc">AI向けGPUで圧倒的シェア。ロボット開発基盤「Isaac」も展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+51%</span> / 勝率<span class="highlight">86%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/NVDA" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">AMD</div>
+                        <div class="stock-code">AMD</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 549.6億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+34.1%</span>/益<span class="growth-pos">+217.1%</span></span>
+                    </div>
+                    <div class="desc">CPUとGPU大手。データセンターやエッジAI向けプロセッサを強化中。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+44%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/AMD" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">インテル</div>
+                        <div class="stock-code">INTC</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 476.2億ドル</span>
+                    <span class="badge rating-hold">中立</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+7.2%</span></span>
+                    </div>
+                    <div class="desc">CPU世界最大手。自動運転（モービルアイ）やエッジAIチップも展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+22%</span> / 勝率<span class="highlight">56%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/INTC" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">クアルコム</div>
+                        <div class="stock-code">QCOM</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 166.6億ドル</span>
+                    <span class="badge rating-hold">中立</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+5.0%</span>/益<span class="growth-neg">-1.8%</span></span>
+                    </div>
+                    <div class="desc">スマホ向け通信半導体最大手。エッジAIや車載向けチップへの多角化を推進。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+20%</span> / 勝率<span class="highlight">43%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/QCOM" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ブロードコム</div>
+                        <div class="stock-code">AVGO</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 1.9兆ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+29.5%</span>/益<span class="growth-pos">+31.6%</span></span>
+                    </div>
+                    <div class="desc">通信・ネットワーク用半導体。カスタムAIチップ（ASIC）の開発に強み。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+52%</span> / 勝率<span class="highlight">88%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/AVGO" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">アーム</div>
+                        <div class="stock-code">ARM</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 214.2億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+26.3%</span>/益<span class="growth-neg">-12.3%</span></span>
+                    </div>
+                    <div class="desc">スマホ用CPU設計図で市場独占。AI向けや車載向けアーキテクチャを展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+29%</span> / 勝率<span class="highlight">64%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ARM" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">マーベル</div>
+                        <div class="stock-code">MRVL</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 136.9億ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+22.1%</span>/益<span class="growth-pos">+106.3%</span></span>
+                    </div>
+                    <div class="desc">データインフラ向け半導体。AIデータセンター用ネットワークチップに強み。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+49%</span> / 勝率<span class="highlight">83%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/MRVL" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">マイクロン</div>
+                        <div class="stock-code">MU</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 584.7億ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+196.3%</span>/益<span class="growth-pos">+756.0%</span></span>
+                    </div>
+                    <div class="desc">DRAMやNANDなどのメモリ半導体大手。AIサーバー向けHBMを供給。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+51%</span> / 勝率<span class="highlight">82%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/MU" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-4">
+        <h2 class="category-title">5. 基幹部品</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">イートン</div>
+                        <div class="stock-code">ETN</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 159.4億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+13.1%</span>/益<span class="growth-pos">+18.9%</span></span>
+                    </div>
+                    <div class="desc">電力管理ソリューション大手。データセンターや産業設備の効率化を支援。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+47%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ETN" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">エマソン</div>
+                        <div class="stock-code">EMR</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 76.7億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+4.1%</span>/益<span class="growth-pos">+4.9%</span></span>
+                    </div>
+                    <div class="desc">産業用自動化機器とソフトウェア。プラント制御システムなどで世界有数。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+49%</span> / 勝率<span class="highlight">83%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/EMR" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">パーカー・ハネフィン</div>
+                        <div class="stock-code">PH</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 119.6億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+9.1%</span>/益<span class="growth-neg">-9.0%</span></span>
+                    </div>
+                    <div class="desc">モーション＆コントロール技術。航空宇宙、産業、モバイル向け油空圧機器。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+35%</span> / 勝率<span class="highlight">63%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/PH" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ローパー</div>
+                        <div class="stock-code">ROP</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 36.6億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+11.3%</span>/益<span class="growth-pos">+59.2%</span></span>
+                    </div>
+                    <div class="desc">産業向けソフトウェアとエンジニアリング製品の複合企業。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+49%</span> / 勝率<span class="highlight">83%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ROP" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ハネウェル</div>
+                        <div class="stock-code">HON</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 133.3億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+2.4%</span>/益<span class="growth-neg">-41.9%</span></span>
+                    </div>
+                    <div class="desc">航空宇宙からビル制御、機能性材料まで多角展開。量子コンピューターも。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+33%</span> / 勝率<span class="highlight">64%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/HON" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">アメテック</div>
+                        <div class="stock-code">AME</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 52.2億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+13.4%</span>/益<span class="growth-pos">+3.6%</span></span>
+                    </div>
+                    <div class="desc">電子機器と電気機械装置のグローバル企業。高精度な計測機器などを提供。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+48%</span> / 勝率<span class="highlight">81%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/AME" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">イリノイ・ツール</div>
+                        <div class="stock-code">ITW</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 76.6億ドル</span>
+                    <span class="badge rating-hold">中立</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+4.1%</span>/益<span class="growth-pos">+7.3%</span></span>
+                    </div>
+                    <div class="desc">特殊産業用機器や消費財。自動車部品や溶接機器など広範に展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+35%</span> / 勝率<span class="highlight">60%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ITW" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ノードソン</div>
+                        <div class="stock-code">NDSN</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 15.6億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+8.8%</span>/益<span class="growth-pos">+44.2%</span></span>
+                    </div>
+                    <div class="desc">接着剤やコーティング材の精密塗布装置。電子部品や医療向けで強み。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+43%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/NDSN" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ワブテック</div>
+                        <div class="stock-code">WAB</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 44.3億ドル</span>
+                    <span class="badge rating-strong">強気買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+13.0%</span>/益<span class="growth-pos">+12.8%</span></span>
+                    </div>
+                    <div class="desc">貨物鉄道向け機器。自動運転機関車や鉄道のデジタル化技術を推進。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+51%</span> / 勝率<span class="highlight">85%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/WAB" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">リンカーン・エレクトリック</div>
+                        <div class="stock-code">LECO</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 14.1億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+5.5%</span>/益<span class="growth-neg">-0.3%</span></span>
+                    </div>
+                    <div class="desc">アーク溶接機器の世界的企業。溶接ロボットシステムのソリューションも。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+32%</span> / 勝率<span class="highlight">67%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/LECO" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">ドーバー</div>
+                        <div class="stock-code">DOV</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 29.9億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+10.1%</span>/益<span class="growth-pos">+5.3%</span></span>
+                    </div>
+                    <div class="desc">産業機器のコングロマリット。マーキングや流体ハンドリングなどを手掛ける。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+44%</span> / 勝率<span class="highlight">78%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/DOV" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">インガソール・ランド</div>
+                        <div class="stock-code">IR</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 30.3億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+10.1%</span>/益<span class="growth-pos">+18.4%</span></span>
+                    </div>
+                    <div class="desc">産業用エアコンプレッサーやポンプなど、流体管理技術のグローバル企業。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+45%</span> / 勝率<span class="highlight">82%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/IR" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-5">
+        <h2 class="category-title">6. その他部品</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">TEコネクティビティ</div>
+                        <div class="stock-code">TEL</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 59.9億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+14.5%</span>/益<span class="growth-pos">+7150.0%</span></span>
+                    </div>
+                    <div class="desc">センサーおよびコネクタの世界最大手。自動車や通信機器向けに展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+47%</span> / 勝率<span class="highlight">81%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/TEL" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">アンフェノール</div>
+                        <div class="stock-code">APH</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 182.4億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+49.1%</span>/益<span class="growth-pos">+57.6%</span></span>
+                    </div>
+                    <div class="desc">コネクタ、光ファイバー、アンテナ等の設計・製造で世界をリード。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+43%</span> / 勝率<span class="highlight">81%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/APH" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">コーニング</div>
+                        <div class="stock-code">GLW</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 130.2億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+20.0%</span>/益<span class="growth-pos">+138.9%</span></span>
+                    </div>
+                    <div class="desc">特殊ガラスやセラミック。光ファイバーやディスプレイ用ガラスの大手。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+45%</span> / 勝率<span class="highlight">77%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/GLW" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">キーサイト</div>
+                        <div class="stock-code">KEYS</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 57.5億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+23.3%</span>/益<span class="growth-pos">+68.0%</span></span>
+                    </div>
+                    <div class="desc">電子計測機器のトップ企業。5G/6G通信や自動運転システムのテスト基盤。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+50%</span> / 勝率<span class="highlight">82%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/KEYS" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">フォーティブ</div>
+                        <div class="stock-code">FTV</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 19.0億ドル</span>
+                    <span class="badge rating-hold">中立</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+4.6%</span>/益<span class="growth-neg">-2.6%</span></span>
+                    </div>
+                    <div class="desc">産業用センサーや計測機器、ソフトウェアなどを提供する複合企業。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+16%</span> / 勝率<span class="highlight">46%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/FTV" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">テキサス・インスツルメンツ</div>
+                        <div class="stock-code">TXN</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 245.0億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+18.6%</span>/益<span class="growth-pos">+31.3%</span></span>
+                    </div>
+                    <div class="desc">アナログ半導体の世界最大手。自動車や産業機器向けの各種制御チップを展開。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+48%</span> / 勝率<span class="highlight">81%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/TXN" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">アナログ・デバイセズ</div>
+                        <div class="stock-code">ADI</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 190.1億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+30.4%</span>/益<span class="growth-pos">+116.7%</span></span>
+                    </div>
+                    <div class="desc">高性能アナログ半導体。通信やデータ処理、モーター制御向けのICに強み。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+45%</span> / 勝率<span class="highlight">80%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ADI" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">マイクロチップ</div>
+                        <div class="stock-code">MCHP</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 48.8億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-pos">+15.6%</span></span>
+                    </div>
+                    <div class="desc">マイコン大手。IoT機器や産業制御システム向けに提供。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+40%</span> / 勝率<span class="highlight">78%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/MCHP" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">オンセミ</div>
+                        <div class="stock-code">ON</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 38.9億ドル</span>
+                    <span class="badge rating-buy">買い</span>
+                </div>
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">売上<span class="growth-neg">-11.2%</span>/益<span class="growth-neg">-48.7%</span></span>
+                    </div>
+                    <div class="desc">パワー半導体とイメージセンサー大手。EVや自動運転、産業用ロボットに必須。</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🇺🇸</span>
+                            <span>期待値<span class="highlight">+18%</span> / 勝率<span class="highlight">51%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://finance.yahoo.co.jp/quote/ON" target="_blank" class="link-btn">Yahoo Financeで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, i) => { card.style.animationDelay = `${i * 0.05}s`; });
+    });
+</script>
+</body>
+</html>

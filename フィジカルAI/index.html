@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フィジカルAI 関連銘柄ダッシュボード</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a; --surface: rgba(30, 41, 59, 0.7);
+            --primary: #3b82f6; --accent: #10b981;
+            --text-main: #f8fafc; --text-muted: #cbd5e1; --border: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg-color); background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%); background-attachment: fixed; color: var(--text-main); line-height: 1.6; padding-bottom: 50px; }
+        header { padding: 40px 20px; text-align: center; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(to right, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .category-nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 30px 0; }
+        .nav-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; text-decoration: none; transition: all 0.3s ease; font-size: 0.9rem; font-weight: 500; }
+        .nav-btn:hover { background: rgba(59, 130, 246, 0.2); color: white; border-color: rgba(59, 130, 246, 0.5); transform: translateY(-2px); }
+        .category-section { margin-bottom: 60px; scroll-margin-top: 150px; }
+        .category-title { font-size: 1.8rem; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 2px solid rgba(59, 130, 246, 0.3); display: inline-block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        .card { background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 16px; padding: 25px; transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, #3b82f6, #10b981); opacity: 0; transition: opacity 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.2); }
+        .card:hover::before { opacity: 1; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .stock-name { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 5px; }
+        .stock-code { font-family: 'Inter', sans-serif; color: #94a3b8; font-size: 0.9rem; background: rgba(255, 255, 255, 0.1); padding: 2px 8px; border-radius: 4px; }
+        .badge-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .badge { font-size: 0.8rem; font-weight: 600; padding: 4px 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .badge.rating-buy { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
+        .badge.rating-strong { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+        .badge.rating-hold { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .metric-box { text-align: center; }
+        .metric-label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 2px; }
+        .metric-val { font-size: 0.95rem; font-weight: 700; color: #e2e8f0; }
+
+        .card-body { flex-grow: 1; }
+        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 8px 0; font-size: 0.9rem; }
+        .stat-label { color: var(--text-muted); }
+        .stat-val { font-weight: 600; }
+        .growth-pos { color: #34d399; }
+        .growth-neg { color: #f87171; }
+        .desc { margin-top: 15px; font-size: 0.9rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; border-left: 2px solid rgba(255, 255, 255, 0.1); }
+        
+        .ai-eval { margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; position: relative; overflow: hidden; box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.05); }
+        .ai-eval::before { content: 'AIの投資評価'; position: absolute; top: 0; left: 0; background: linear-gradient(to right, #3b82f6, #10b981); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 10px; border-bottom-right-radius: 8px; }
+        .ai-eval-content { margin-top: 10px; font-size: 1.1rem; font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 10px; justify-content: center; text-align: center; }
+        .ai-icon { font-size: 1.5rem; }
+        .highlight { color: #34d399; font-size: 1.3rem; margin: 0 4px; }
+        .card-footer { margin-top: 20px; }
+        .link-btn { display: block; text-align: center; background: rgba(255, 255, 255, 0.05); color: white; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .link-btn:hover { background: var(--primary); border-color: var(--primary); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { animation: fadeIn 0.5s ease backwards; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Physical AI Stocks</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem;">フィジカルAI・ロボティクス関連銘柄の最新ダッシュボード（AI評価付き）</p>
+    <div class="category-nav" id="nav-container">
+        <a href="#cat-0" class="nav-btn">1. AI開発・導入</a>\n<a href="#cat-1" class="nav-btn">2. センシングなど独自技術</a>\n<a href="#cat-2" class="nav-btn">3. ロボット本体・アーム</a>\n<a href="#cat-3" class="nav-btn">4. 開発支援・実用化技術</a>\n<a href="#cat-4" class="nav-btn">5. 基幹部品</a>\n<a href="#cat-5" class="nav-btn">6. その他部品</a>\n
+    </div>
+</header>
+<div class="container" id="main-content">
+    
+    <div class="category-section" id="cat-0">
+        <h2 class="category-title">1. AI開発・導入</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">1. AI開発・導入</div>
+                        <div class="stock-code">セック</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 3741</span>
+                    <span class="badge ">売上+5.9%/益-42.3%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">30.6億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">21.7倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.08倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">187.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=3741</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="システム開発。リアルタイムソフトウエア技術に強み。モバイル決済や宇宙、ロボット関連など。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">1. AI開発・導入</div>
+                        <div class="stock-code">マクニカHD</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 3132</span>
+                    <span class="badge ">売上+19.0%/益-0.7%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">471.0億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">22.8倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.78倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">265.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=3132</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="独立系半導体商社で国内大手。技術開発に強み。AI分野、セキュリティ製品も。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">1. AI開発・導入</div>
+                        <div class="stock-code">エクサウィザーズ</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 4259</span>
+                    <span class="badge ">売上+22.6%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">68.4億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">221.6倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">16.04倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">0.00%</span>
+                    </div>
+                    <div class="desc">強気買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=4259</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="AI、DXを利活用したサービス導入・運営を支援。AIの開発にも積極。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">1. AI開発・導入</div>
+                        <div class="stock-code">SRE HD</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 2980</span>
+                    <span class="badge ">売上+122.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">57.4億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">54.1倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.83倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">50.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=2980</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="ITテクノロジーとAI技術を基盤とした不動産事業。金融機関向けソリューション事業。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">1. AI開発・導入</div>
+                        <div class="stock-code">ABEJA</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 5574</span>
+                    <span class="badge ">売上+11.0%/益-3.6%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">24.8億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">47.9倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">5.03倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">0.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=5574</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="企業のDXを支援。AIによるデジタルプラットフォーム事業の運営を手掛ける。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">1. AI開発・導入</div>
+                        <div class="stock-code">ヘッドウォータース</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 4011</span>
+                    <span class="badge ">売上+46.5%/益-90.2%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">8.6億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">161.1倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">6.44倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">0.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=4011</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="企業の経営課題をAIシステム開発を通して解決するソリューション事業。保守運用も。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-1">
+        <h2 class="category-title">2. センシングなど独自技術</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">2. センシングなど独自技術</div>
+                        <div class="stock-code">村田製作所</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6981</span>
+                    <span class="badge ">売上+4.3%/益-64.1%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">8.8兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">47.4倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.40倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">124.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6981</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="積層セラミックコンデンサ世界首位。材料から一貫生産の技術力強み。海外販売大。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">2. センシングなど独自技術</div>
+                        <div class="stock-code">テクノホライゾン</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6629</span>
+                    <span class="badge ">売上-4.2%/益-23.7%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">16.9億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">139.7倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.60倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">159.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6629</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="映像・ITとロボティクス技術を核に教育、生活、医療、FA分野で応用・製品化。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">2. センシングなど独自技術</div>
+                        <div class="stock-code">オプテックスG</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6914</span>
+                    <span class="badge ">売上+11.6%/益-13.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">104.8億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">15.9倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.86倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">221.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6914</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="防犯用、自動ドアなど各種センサー大手。FAや画像検査用も。M&Aで海外展開。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">2. センシングなど独自技術</div>
+                        <div class="stock-code">アバールデータ</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6918</span>
+                    <span class="badge ">売上-13.4%/益+1.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">16.9億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">22.5倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.85倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">186.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6918</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="半導体製造装置の制御組込を受託。自社製品も。画像・計測・通信が主力。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">2. センシングなど独自技術</div>
+                        <div class="stock-code">Kudan</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 4425</span>
+                    <span class="badge ">売上+210.9%/益+215.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">29.1億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">-227.0倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">11.33倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">0.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=4425</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="人工知覚技術の研究開発やライセンスの提供。国内外の先端技術企業と提携。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">2. センシングなど独自技術</div>
+                        <div class="stock-code">キヤノン</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 7751</span>
+                    <span class="badge ">売上+3.3%/益-28.6%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">3.6兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">11.1倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.03倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">388.00%</span>
+                    </div>
+                    <div class="desc">中立</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=7751</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="OA機器総合メーカー。カメラ、事務機器で世界大手。半導体露光装置、医療機器も。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">2. センシングなど独自技術</div>
+                        <div class="stock-code">キーエンス</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6861</span>
+                    
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">17.9兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">39.8倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">5.32倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">75.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6861</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="計測制御機器大手。FA用センサーが主力。生産の大半を外注。直販体制に強み。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-2">
+        <h2 class="category-title">3. ロボット本体・アーム</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">ファナック</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6954</span>
+                    <span class="badge ">売上+10.6%/益+11.0%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">6.5兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">38.3倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.41倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">154.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6954</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="NC装置で世界トップ。産業用ロボットに強み。小型マシニングセンタも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">安川電機</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6506</span>
+                    <span class="badge ">売上+2.0%/益-15.7%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">1.4兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">41.2倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.00倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">134.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6506</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="メカトロ大手。サーボモーターとインバーターで世界トップ。産業用ロボット累積出荷も首位級。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">ソフトバンクG</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 9984</span>
+                    <span class="badge ">売上+8.2%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">30.0兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">9.7倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.92倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">21.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=9984</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="投資持ち株会社。傘下に投資のビジョンファンド、通信、英半導体設計アーム。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">川崎重工業</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 7012</span>
+                    
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">2.7兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">27.6倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.28倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">102.00%</span>
+                    </div>
+                    <div class="desc">強気買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=7012</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="総合重機大手。航空宇宙、鉄道車両、大型2輪などに強み。潜水艦も製造。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">ダイヘン</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6622</span>
+                    
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">353.6億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">28.8倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.45倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">117.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6622</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="小型変圧器、アーク溶接機で首位。半導体関連機器用も。FAロボット事業も。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">オムロン</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6645</span>
+                    <span class="badge ">売上+7.7%/益-49.6%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">1.0兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">38.5倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.36倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">196.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6645</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="制御機器大手。感知・リレー制御技術が得意。車載、鉄道システム、ヘルスケアも展開。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">西部電機</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6144</span>
+                    <span class="badge ">売上+20.9%/益+27.6%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">43.4億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">13.2倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.35倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">293.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6144</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="搬送装置、産業機械、精密機械が3本柱。バルブコントロールに強み。安川電と密。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">不二越</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6474</span>
+                    <span class="badge ">売上+6.2%/益-18.1%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">110.9億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">21.9倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.64倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">196.00%</span>
+                    </div>
+                    <div class="desc">中立</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6474</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="工具、軸受、産業用ロボット大手。自動車向け中心。油圧機器、工作機械も展開。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">ヤマハ発動機</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 7272</span>
+                    <span class="badge ">売上+4.1%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">1.1兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">6.9倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.94倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">457.00%</span>
+                    </div>
+                    <div class="desc">中立</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=7272</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="ヤマハ直系の2輪車世界大手。船舶などに多角化、船外機で首位。ロボットも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">デンソー</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6902</span>
+                    <span class="badge ">売上+5.0%/益+25.6%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">5.0兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">11.4倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.95倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">401.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6902</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="トヨタ系の自動車部品国内首位、世界2位。カーエアコンで高シェア。技術力に強み。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">アズビル</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6845</span>
+                    <span class="badge ">売上-4.4%/益-46.1%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">705.9億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">16.5倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.96倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">187.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6845</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="制御・自動化機器が高シェア。強みのエネルギー管理で改修も展開。海外で攻勢。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">セイコーエプソン</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6724</span>
+                    <span class="badge ">売上+7.7%/益-29.3%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">676.7億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">13.6倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.80倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">350.00%</span>
+                    </div>
+                    <div class="desc">中立</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6724</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="インクジェットプリンタ世界大手。交換インク収益性。産業用スカラロボット、プロジェクターも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">3. ロボット本体・アーム</div>
+                        <div class="stock-code">川田テクノロジーズ</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 3443</span>
+                    <span class="badge ">売上-18.6%/益-68.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">86.3億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">8.9倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.89倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">293.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=3443</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="鉄骨、橋梁大手。PC土木やシステム建築も。航空事業やロボット事業も注力。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-3">
+        <h2 class="category-title">4. 開発支援・実用化技術</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">豆蔵</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 202A</span>
+                    <span class="badge ">売上+14.6%/益+47.1%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">56.8億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">36.4倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">17.58倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">1.69%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=202A</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="-" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">三菱電機</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6503</span>
+                    <span class="badge ">売上+4.9%/益-14.9%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">12.4兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">33.0倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.10倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">99.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6503</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="総合電機大手。防衛・宇宙関連で先行。FA、家電、パワー半導体や自動運転にも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">日立製作所</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6501</span>
+                    <span class="badge ">売上+11.3%/益-10.1%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">22.7兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">27.6倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.47倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">111.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6501</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="総合電機・重電トップ。事業広範で技術に定評。インフラ系重視。海外注力。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">日本電気（NEC）</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6701</span>
+                    
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">5.9兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">20.4倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.67倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">90.00%</span>
+                    </div>
+                    <div class="desc">強気買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6701</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="通信設備で国内トップ。ITサービス拡大。顔認証技術の販売を推進。5Gインフラも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">富士通</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6702</span>
+                    <span class="badge ">売上-4.3%/益+60.2%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">6.4兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">18.6倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.82倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">162.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6702</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="サーバー、ITシステムの国内トップ。公共、金融、流通向けに強み。DX推進・コンサル強化。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">ソニーG</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6758</span>
+                    <span class="badge ">売上+0.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">19.1兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">15.1倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.28倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">77.00%</span>
+                    </div>
+                    <div class="desc">強気買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6758</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="AV機器世界大手。映画、ゲーム、音楽を展開。画像センサー等デバイス事業拡大。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">ルネサス</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6723</span>
+                    <span class="badge ">売上+23.2%/益+158.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">5.3兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">12.5倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.26倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">96.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6723</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="半導体大手。ルネサスとNECエレが統合。車載マイコン世界トップ級。FA、インフラ向けも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">4. 開発支援・実用化技術</div>
+                        <div class="stock-code">ジーデップ・アドバンス</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 5885</span>
+                    <span class="badge ">売上+9.1%/益+183.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">16.2億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">26.0倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">4.92倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">97.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=5885</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="AI学習など高度処理を可能なソフト・ハードの販売。米NVIDIAのエリートパートナー。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-4">
+        <h2 class="category-title">5. 基幹部品</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">ヒーハイスト</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6433</span>
+                    <span class="badge ">売上-41.0%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">9.7億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">-</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">3.89倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">15.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6433</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="機械向け軸受けを製造。高精度な位置決め制御装置も。THK向け過半。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">ハーモニック</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6324</span>
+                    
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">449.2億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">105.2倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">6.27倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">42.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6324</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="精密制御減速装置が軸。小型・軽量強み。産業用ロボット向け等。メカトロ製品も。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">住友重機械工業</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6302</span>
+                    <span class="badge ">売上+5.8%/益+22.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">663.4億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">20.3倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.92倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">261.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6302</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="住友系重工大手。変減速機や射出成形機に強み。建機、エネルギー・ライフラインも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">ミネベアミツミ</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6479</span>
+                    <span class="badge ">売上+22.8%/益+18.2%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">1.2兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">19.8倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.47倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">163.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6479</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="総合精密部品メーカー。極小ベアリングで世界高シェア。ミツミと統合で新分野開拓。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">日本精工</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6471</span>
+                    <span class="badge ">売上+23.6%/益+114.9%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">597.9億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">32.9倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.87倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">278.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6471</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="ベアリング最大手。電動パワステ等自動車用軸受け、産機用展開。車電動化注力。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">山洋電気</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6516</span>
+                    <span class="badge ">売上+11.9%/益+79.0%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">249.3億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">29.1倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.05倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">256.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6516</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="通信機器用冷却ファン、電源、工作機械向けなど小型・精密サーボモーターが主軸。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">カヤバ</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 7242</span>
+                    <span class="badge ">売上+12.6%/益+133.9%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">190.7億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">8.1倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.83倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">334.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=7242</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="油圧機器総合メーカー。四輪用衝撃緩衝器で世界上位。建機油圧シリンダー首位。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">IDEC</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6652</span>
+                    <span class="badge ">売上+15.4%/益+237.7%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">98.0億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">43.3倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.43倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">392.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6652</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="制御機器大手。スイッチや表示灯に強み。自動認識機器や防災・防爆関連強化。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">ナブテスコ</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6268</span>
+                    <span class="badge ">売上-5.2%/益-4.0%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">589.1億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">40.9倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.19倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">163.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6268</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="産業ロボット用精密減速機は世界6割。自動ドアで世界トップ級。鉄道ブレーキも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">マブチモーター</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6592</span>
+                    <span class="badge ">売上+6.5%/益+374.4%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">375.3億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">14.1倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.10倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">366.00%</span>
+                    </div>
+                    <div class="desc">中立</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6592</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="小型モーターで世界高シェア。海外生産比率100%。車載用電装機器が主軸。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">ニデック</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6594</span>
+                    <span class="badge ">売上+2.9%/益+108.7%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">2.7兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">22.7倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.55倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">192.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6594</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="精密小型モーター大手。HDD用で世界首位。車載用など中大型に積極。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">5. 基幹部品</div>
+                        <div class="stock-code">シンフォニア</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6507</span>
+                    <span class="badge ">売上-1.5%/益+2.2%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">393.9億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">31.7倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">4.53倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">86.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6507</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="重電から電子精密へ転換。搬送装置や制御機器を展開。エンジニアリングも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+    <div class="category-section" id="cat-5">
+        <h2 class="category-title">6. その他部品</h2>
+        <div class="grid">
+    
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">JMACS</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 5817</span>
+                    <span class="badge ">売上+5.0%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">8.1億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">19.6倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.47倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">105.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=5817</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="電線中堅。計装・制御用、警報用。小ロット・短納期に強み。FA事業は撤退。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">日本トムソン</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6480</span>
+                    <span class="badge ">売上+13.3%/益+1387.9%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">74.0億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">23.7倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.95倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">264.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6480</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="直動案内機器と2輪ニードル軸受けの2本柱。少量多品種生産。複合メカトロも。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">イリソ電子工業</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6908</span>
+                    <span class="badge ">売上+7.6%/益-7.2%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">69.5億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">19.8倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.94倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">338.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6908</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="コネクター製造大手。車載用が主力、デジタル家電用、産業用も。カスタム製品に定評。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">SMC</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6273</span>
+                    <span class="badge ">売上+7.3%/益+1.6%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">4.9兆円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">31.5倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.41倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">130.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6273</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="FA空圧制御機器で世界トップ。国内のシェア6割。流体制御も力。海外展開加速。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">新東工業</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6339</span>
+                    <span class="badge ">売上+12.2%/益+316.7%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">51.9億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">16.5倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.41倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">445.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6339</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="鋳造機械最大手。鋳造設備は国内外納入。表面処理や環境関連装置も。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">コンバム</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6265</span>
+                    <span class="badge ">売上+11.4%/益+2.5%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">4.6億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">18.5倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">0.76倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">167.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6265</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="独立系、ロボットハンド真空吸着搬送機器メーカー。自動車、電子産業向けが主力。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">THK</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6481</span>
+                    
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">650.1億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">65.8倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">2.54倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">317.00%</span>
+                    </div>
+                    <div class="desc">-</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6481</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="直動システム大手。半導体製造装置、工作機械向け。LMガイドなど世界シェア首位。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">ヒロセ電機</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6806</span>
+                    <span class="badge ">売上+9.3%/益-5.9%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">712.0億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">23.7倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.90倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">225.00%</span>
+                    </div>
+                    <div class="desc">買い</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6806</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="コネクター専業大手。産業機器、車載、スマホ向けが主力。国内は開発・営業特化。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="stock-name">6. その他部品</div>
+                        <div class="stock-code">日本航空電子工業</div>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">時価総額: 6807</span>
+                    <span class="badge ">売上+10.7%/益-12.2%</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">PER</div>
+                        <div class="metric-val">165.7億円</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">PBR</div>
+                        <div class="metric-val">23.0倍</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">配当利回り</div>
+                        <div class="metric-val">1.17倍</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stat-row">
+                        <span class="stat-label">業績推移(直近)</span>
+                        <span class="stat-val">203.00%</span>
+                    </div>
+                    <div class="desc">中立</div>
+                    
+                    <div class="ai-eval">
+                        <div class="ai-eval-content">
+                            <span class="ai-icon">🤖</span>
+                            <span>https://kabutan.jp/stock/?code=6807</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="NEC系コネクター大手。小型、高速伝送で競争力。車、航空・宇宙向け電子機器も。" target="_blank" class="link-btn">Kabutanで詳細を見る ↗</a>
+                </div>
+            </div>
+        </div></div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, i) => { card.style.animationDelay = `${i * 0.05}s`; });
+    });
+</script>
+</body>
+</html>
