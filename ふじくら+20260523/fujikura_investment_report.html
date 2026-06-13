@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フジクラ（5803）投資判断レポート 2026年5月</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap');
+
+  :root {
+    --bg: #0a0c10;
+    --bg2: #11141c;
+    --bg3: #181d28;
+    --accent: #e8a020;
+    --accent2: #f0c060;
+    --red: #e05050;
+    --green: #3dba7a;
+    --blue: #4a90d9;
+    --text: #dde4f0;
+    --text2: #8a95aa;
+    --border: #2a3040;
+    --card: #141820;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ===== HEADER ===== */
+  .report-header {
+    background: linear-gradient(135deg, #0a0c10 0%, #141820 40%, #0d1520 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .report-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,160,32,0.08) 0%, transparent 70%);
+  }
+  .header-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .company-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .ticker {
+    color: var(--text2);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+  }
+  .verdict-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(232,160,32,0.12);
+    border: 1.5px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent2);
+    letter-spacing: 0.08em;
+  }
+  .verdict-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .report-date {
+    position: absolute;
+    top: 48px; right: 40px;
+    font-size: 12px;
+    color: var(--text2);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ===== KPI ROW ===== */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 16px;
+    position: relative;
+  }
+  .kpi-card.highlight {
+    border-color: rgba(232,160,32,0.5);
+    background: rgba(232,160,32,0.05);
+  }
+  .kpi-label {
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .kpi-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-change {
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .kpi-change.up { color: var(--green); }
+  .kpi-change.down { color: var(--red); }
+
+  /* ===== SECTION TITLE ===== */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0 16px;
+  }
+  .section-title h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .section-title .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+  .section-title .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: rgba(232,160,32,0.25);
+    letter-spacing: 0.04em;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+  }
+  .card p {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* ===== PERFORMANCE TABLE ===== */
+  .perf-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 0;
+  }
+  .perf-table thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .perf-table th {
+    padding: 10px 14px;
+    text-align: right;
+    font-size: 11px;
+    color: var(--text2);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .perf-table th:first-child { text-align: left; }
+  .perf-table td {
+    padding: 11px 14px;
+    text-align: right;
+    border-bottom: 1px solid rgba(42,48,64,0.6);
+    color: var(--text);
+  }
+  .perf-table td:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: var(--text2);
+  }
+  .perf-table tr.highlight-row td {
+    background: rgba(232,160,32,0.05);
+    color: #fff;
+    font-weight: 700;
+  }
+  .perf-table tr.highlight-row td:first-child { color: var(--accent2); }
+  .perf-table tr.forecast-row td {
+    color: var(--text2);
+    font-style: italic;
+  }
+  .perf-table tr.forecast-row td:first-child { color: var(--blue); }
+  .change-up { color: var(--green) !important; font-weight: 700; }
+  .change-down { color: var(--red) !important; font-weight: 700; }
+
+  /* ===== GROWTH CHART BAR ===== */
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bar-year {
+    font-size: 12px;
+    color: var(--text2);
+    width: 64px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1;
+    background: var(--bg3);
+    border-radius: 3px;
+    height: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.7);
+    transition: width 0.6s ease;
+  }
+  .bar-fill.profit { background: linear-gradient(90deg, #e8a020, #f0c060); }
+  .bar-fill.revenue { background: linear-gradient(90deg, #4a90d9, #7ab8f5); }
+  .bar-fill.forecast { background: linear-gradient(90deg, #3d5070, #5a7090); opacity: 0.75; }
+
+  /* ===== RISK / BULL TWO-COL ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .bull-card, .bear-card {
+    border-radius: 8px;
+    padding: 20px 20px;
+    border: 1px solid;
+  }
+  .bull-card {
+    background: rgba(61,186,122,0.05);
+    border-color: rgba(61,186,122,0.3);
+  }
+  .bear-card {
+    background: rgba(224,80,80,0.05);
+    border-color: rgba(224,80,80,0.3);
+  }
+  .bull-card h3 {
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .bear-card h3 {
+    color: var(--red);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .point-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .point-list li {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+  }
+  .point-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--text2);
+  }
+
+  /* ===== SCORE METER ===== */
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .score-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .score-label {
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+  .score-bar-wrap {
+    background: var(--bg3);
+    border-radius: 20px;
+    height: 8px;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+  .score-bar {
+    height: 100%;
+    border-radius: 20px;
+  }
+  .score-bar.s-high { background: var(--green); }
+  .score-bar.s-mid { background: var(--accent); }
+  .score-bar.s-low { background: var(--red); }
+  .score-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+  }
+  .s-high-text { color: var(--green); }
+  .s-mid-text { color: var(--accent); }
+  .s-low-text { color: var(--red); }
+
+  /* ===== VERDICT BOX ===== */
+  .verdict-box {
+    background: linear-gradient(135deg, rgba(232,160,32,0.08), rgba(232,160,32,0.02));
+    border: 1.5px solid rgba(232,160,32,0.5);
+    border-radius: 10px;
+    padding: 28px 28px;
+    margin-top: 8px;
+  }
+  .verdict-box h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+  .verdict-box p {
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .strategy-tag {
+    display: inline-block;
+    background: rgba(232,160,32,0.15);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--accent2);
+    font-weight: 700;
+    margin: 4px 4px 4px 0;
+  }
+  .disclaimer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+
+  @media (max-width: 640px) {
+    .kpi-row { grid-template-columns: repeat(2,1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .score-grid { grid-template-columns: repeat(2,1fr); }
+    .report-header { padding: 36px 20px 28px; }
+    .company-name { font-size: 26px; }
+    .report-date { position: static; margin-top: 16px; text-align: left; }
+    .container { padding: 20px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="report-header">
+  <div class="report-date">
+    発行日：2026年5月21日<br>
+    決算発表：2026年5月14日<br>
+    対象期：2026年3月期（本決算）
+  </div>
+  <div class="header-label">EQUITY RESEARCH REPORT</div>
+  <div class="company-name">フジクラ</div>
+  <div class="ticker">東証プライム ｜ 証券コード：5803 ｜ 電線・光ファイバーケーブル</div>
+  <div class="verdict-badge">
+    <span class="dot"></span>
+    投資判断：条件付き買い　（押し目・分割買い推奨）
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- KPI -->
+  <div class="kpi-row">
+    <div class="kpi-card highlight">
+      <div class="kpi-label">売上高（2026.3期）</div>
+      <div class="kpi-value">1.18兆</div>
+      <div class="kpi-change up">▲ +20.7%　初の兆円超え</div>
+    </div>
+    <div class="kpi-card highlight">
+      <div class="kpi-label">営業利益（2026.3期）</div>
+      <div class="kpi-value">1,887億</div>
+      <div class="kpi-change up">▲ +39.2%　過去最高</div>
+    </div>
+    <div class="kpi-card highlight">
+      <div class="kpi-label">純利益（2026.3期）</div>
+      <div class="kpi-value">1,572億</div>
+      <div class="kpi-change up">▲ +72.5%　過去最高</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">年間配当（株式分割後換算）</div>
+      <div class="kpi-value">38円</div>
+      <div class="kpi-change up">▲ 2027.3期予想（前期225円→6分割）</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: PERFORMANCE -->
+  <div class="section-title">
+    <span class="num">01</span>
+    <h2>業績推移：急成長の軌跡</h2>
+    <span class="line"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">連結業績サマリー（百万円）</div>
+    <table class="perf-table">
+      <thead>
+        <tr>
+          <th>決算期</th>
+          <th>売上高</th>
+          <th>営業利益</th>
+          <th>経常利益</th>
+          <th>純利益</th>
+          <th>1株益(円)</th>
+          <th>配当(円)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2023.3期</td>
+          <td>806,453</td>
+          <td>70,163</td>
+          <td>67,897</td>
+          <td>40,891</td>
+          <td>24.7</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td>2024.3期</td>
+          <td>799,760</td>
+          <td>69,483</td>
+          <td>69,733</td>
+          <td>51,011</td>
+          <td>30.8</td>
+          <td>9.17</td>
+        </tr>
+        <tr>
+          <td>2025.3期</td>
+          <td>979,375</td>
+          <td>135,519</td>
+          <td>137,240</td>
+          <td>91,123</td>
+          <td>55.1</td>
+          <td>16.67</td>
+        </tr>
+        <tr class="highlight-row">
+          <td>2026.3期（実績）</td>
+          <td>1,182,358</td>
+          <td>188,707</td>
+          <td>199,481</td>
+          <td>157,163</td>
+          <td>94.9</td>
+          <td>37.5</td>
+        </tr>
+        <tr class="forecast-row">
+          <td>2027.3期（予想）</td>
+          <td>1,243,000</td>
+          <td>211,000</td>
+          <td>218,000</td>
+          <td>156,000</td>
+          <td>94.2</td>
+          <td>38</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text2);font-size:12px;">前期比（2027予想）</td>
+          <td class="change-up">+5.1%</td>
+          <td class="change-up">+11.8%</td>
+          <td class="change-up">+9.3%</td>
+          <td class="change-down">▼ -0.7%</td>
+          <td class="change-down">▼ -0.7%</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BAR CHART -->
+  <div class="card">
+    <div class="card-title">営業利益推移（億円）</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-year">2023.3期</span>
+        <div class="bar-track">
+          <div class="bar-fill profit" style="width:33%">702億</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2024.3期</span>
+        <div class="bar-track">
+          <div class="bar-fill profit" style="width:33%">695億</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2025.3期</span>
+        <div class="bar-track">
+          <div class="bar-fill profit" style="width:64%">1,355億</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2026.3期</span>
+        <div class="bar-track">
+          <div class="bar-fill profit" style="width:89%">1,887億 ★過去最高</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2027.3期予</span>
+        <div class="bar-track">
+          <div class="bar-fill forecast" style="width:100%">2,110億（会社予想）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: BUSINESS -->
+  <div class="section-title">
+    <span class="num">02</span>
+    <h2>ビジネス分析：なぜ急成長したのか</h2>
+    <span class="line"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">コア事業：情報通信事業が業績を牽引</div>
+    <p>フジクラは電線・ケーブルメーカーとして創業130年超の歴史を持つが、現在の業績は実質的に「情報通信事業の一本足打法」で成立している。2026.3期における情報通信事業の営業利益は前年度比で約1.7倍に拡大しており、全社利益の大部分を稼ぎ出した。</p>
+    <p>その中核製品が<strong>光ファイバーケーブル</strong>。生成AIの急速な普及によってGoogleやAmazon、Microsoftといったハイパースケーラーがデータセンターを急拡大しており、サーバー間を高速・大容量でつなぐ光ファイバーの需要が爆発的に増加した。</p>
+    <p>フジクラは光ファイバーケーブルの国内生産能力を大幅に増強しながら、高性能品への品種シフトと値上げを並行して推進。数量×単価の両面でドライブがかかり、売上高・利益率ともに大幅改善を果たした。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">株価の文脈：2024年に日経225最高パフォーマー</div>
+    <p>2024年、フジクラ株は年間で約6倍に急騰し、日経平均構成銘柄225社の中でパフォーマンストップを記録した。TOPIX構成銘柄でも年初来上昇率首位、MSCIオール・カントリー・ワールド指数にも日本株として唯一採用されるという快挙を果たした。</p>
+    <p>2025年に入っても年初来2.6倍超の上昇を継続し、2026年5月14日の決算発表前日（5/13）には7,855円まで回復し年初来高値更新。しかし決算発表後にストップ安（▲19.1%急落）となった。現在株価（5/20時点）は4,295円前後に落ち着いている。</p>
+  </div>
+
+  <!-- SECTION 3: EARNINGS SHOCK -->
+  <div class="section-title">
+    <span class="num">03</span>
+    <h2>ストップ安の真相：最高益でなぜ売られたか</h2>
+    <span class="line"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">「期待超え」か「期待未達」か</div>
+    <p>2026.3期の全指標が過去最高を更新したにもかかわらず、株価がストップ安となった最大の理由は、<strong>市場コンセンサス（事前期待値）との乖離</strong>にある。</p>
+    <p>決算前、一部アナリストの業績予想は今期（2027.3期）の純利益を1,700〜1,800億円台と見込んでいた。しかし会社が発表した2027.3期の純利益予想は1,560億円（前期比▲0.7%減益）。これが「失望売り」の引き金となった。</p>
+    <p>会社側は「光ケーブルの急峻な増産により、水素等の一部原材料調達が追いつかなくなる懸念」「ホルムズ海峡封鎖による物流停滞・ナフサ供給不足」といったリスクを保守的に織り込んだと説明した。すなわち、<strong>業績が悪化したのではなく、ガイダンスが"慎重すぎた"とも読める</strong>。</p>
+  </div>
+
+  <!-- SECTION 4: BULL/BEAR -->
+  <div class="section-title">
+    <span class="num">04</span>
+    <h2>強気・弱気シナリオの整理</h2>
+    <span class="line"></span>
+  </div>
+
+  <div class="two-col">
+    <div class="bull-card">
+      <h3>📈 強気（ブル）シナリオ</h3>
+      <ul class="point-list">
+        <li>AI・データセンター投資の需要は構造的・長期的。2027年以降も光ファイバー需給はタイト継続の見方が多い</li>
+        <li>会社ガイダンスは保守的。ホルムズリスクが軽減すれば上方修正余地あり</li>
+        <li>配当性向を従来30%→40%に引き上げ。株主還元強化の方針明確化</li>
+        <li>日米での生産能力3倍化計画が進行中。数量拡大による増収余地が大きい</li>
+        <li>ストップ安で株価がリセット。4,000円台は中長期の押し目として機能する可能性</li>
+        <li>アナリストの多数は依然「強気・買い」を継続</li>
+      </ul>
+    </div>
+    <div class="bear-card">
+      <h3>📉 弱気（ベア）シナリオ</h3>
+      <ul class="point-list">
+        <li>情報通信事業への集中（一本足打法）は景況悪化時のリスク要因</li>
+        <li>ホルムズ海峡封鎖の長期化・ナフサ高騰が原価を直撃する可能性</li>
+        <li>2027.3期は純利益が微減益予想。成長鈍化を意識した売りが続くリスク</li>
+        <li>決算前の株価上昇（7,855円）が「期待の前借り」となっており、バリュエーション修正がさらに続く懸念</li>
+        <li>競合他社（古河電工等）の生産能力増強で、中期的に光ファイバー供給過剰となるリスク</li>
+        <li>株式分割後（1→6）に個人投資家の売買が増え、ボラティリティが高まる可能性</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5: SCORE -->
+  <div class="section-title">
+    <span class="num">05</span>
+    <h2>多角的評価スコア</h2>
+    <span class="line"></span>
+  </div>
+
+  <div class="score-grid">
+    <div class="score-item">
+      <div class="score-label">業績成長力</div>
+      <div class="score-bar-wrap"><div class="score-bar s-high" style="width:90%"></div></div>
+      <div class="score-num s-high-text">9.0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">収益性（利益率）</div>
+      <div class="score-bar-wrap"><div class="score-bar s-high" style="width:80%"></div></div>
+      <div class="score-num s-high-text">8.0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">財務健全性</div>
+      <div class="score-bar-wrap"><div class="score-bar s-mid" style="width:65%"></div></div>
+      <div class="score-num s-mid-text">6.5</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">株主還元</div>
+      <div class="score-bar-wrap"><div class="score-bar s-mid" style="width:70%"></div></div>
+      <div class="score-num s-mid-text">7.0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">バリュエーション</div>
+      <div class="score-bar-wrap"><div class="score-bar s-low" style="width:35%"></div></div>
+      <div class="score-num s-low-text">3.5</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">リスク耐性</div>
+      <div class="score-bar-wrap"><div class="score-bar s-low" style="width:40%"></div></div>
+      <div class="score-num s-low-text">4.0</div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="section-title">
+    <span class="num">06</span>
+    <h2>投資判断・総合評価</h2>
+    <span class="line"></span>
+  </div>
+
+  <div class="verdict-box">
+    <h2>✦ 判断：条件付き「押し目分割買い」</h2>
+    <p>フジクラの直近決算は「数字は最高益、でも次期ガイダンスが保守的すぎた」という構造で株価が急落した。業績の本質的な悪化ではなく、期待値の調整局面と見るのが妥当だ。</p>
+    <p>AIデータセンター向け光ファイバー需要はドライバーとして依然強固であり、日米での生産能力3倍化計画も進行中。2027.3期の純利益微減予想は、あくまで会社の保守的な見込みであり、ホルムズリスクが落ち着けば上方修正の可能性が十分ある。</p>
+    <p>一方で、ストップ安後もバリュエーション（PER）は高水準であり、短期での全力買いは禁物。現在の4,000円台前半〜中盤にかけて、<strong>数回に分けた分割買い</strong>が現実的なアプローチだ。</p>
+    <p>
+      <span class="strategy-tag">長期保有：有望</span>
+      <span class="strategy-tag">分割買い：推奨</span>
+      <span class="strategy-tag">全力一括：注意</span>
+      <span class="strategy-tag">短期トレード：高ボラティリティに要注意</span>
+    </p>
+  </div>
+
+  <div class="disclaimer">
+    ※ 本レポートは公開情報に基づく個人的な分析であり、特定の有価証券の売買を推奨・勧誘するものではありません。投資判断はご自身の責任において行ってください。株式投資にはリスクが伴います。数値・情報は2026年5月時点のものです。
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【YouTube台本】レゾナック・ホールディングス（4004）徹底分析</title>
+    <meta name="description" content="レゾナック・ホールディングス（4004）のYouTube解説用ナレーション読み上げ台本。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #060814;
+            --bg-secondary: #0b0f19;
+            --bg-card: rgba(11, 15, 25, 0.6);
+            --border-color: rgba(0, 240, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --color-accent: #00f0ff; /* Cyber Cyan */
+            --color-accent-rgb: 0, 240, 255;
+            --color-secondary: #8b5cf6; /* Electric Purple */
+            --color-success: #10b981; /* Digital Green */
+            --color-warning: #fbbf24; /* Amber */
+            --color-danger: #f43f5e; /* Rose */
+            --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #3b82f6 50%, #8b5cf6 100%);
+            --font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+            --font-display: 'Outfit', 'Noto Sans JP', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(6, 8, 20, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 999;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 22px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            font-size: 13px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            color: var(--color-accent);
+            -webkit-text-fill-color: var(--color-accent);
+            font-family: var(--font-sans);
+            font-weight: 600;
+        }
+
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 110px auto 40px;
+            padding: 0 40px;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            position: sticky;
+            top: 110px;
+            height: calc(100vh - 150px);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .sidebar h3 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-list li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-list li a:hover,
+        .toc-list li.active a {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+            border-left-color: var(--color-accent);
+            padding-left: 18px;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 940px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            padding: 48px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(11, 15, 25, 0.9) 0%, rgba(6, 8, 20, 0.95) 100%);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.12) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            align-self: flex-start;
+            padding: 6px 14px;
+            border-radius: 99px;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            color: var(--color-accent);
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.35;
+            letter-spacing: -0.5px;
+            z-index: 1;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            z-index: 1;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Glassmorphism Section Card */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 240, 255, 0.15);
+        }
+
+        .content-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-num {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .section-content p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+            text-align: justify;
+            text-justify: inter-character;
+        }
+
+        /* Intro Text Box Styling */
+        .intro-box {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--color-accent);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+
+        .intro-box p {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 0;
+        }
+
+        /* Highlight point */
+        .point-highlight {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .point-highlight ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .point-highlight li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .point-highlight li::before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--color-accent);
+            font-size: 18px;
+        }
+
+        /* Highlight key variables */
+        strong {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        .purple-strong {
+            color: var(--color-secondary);
+            font-weight: 700;
+        }
+
+        .green-strong {
+            color: var(--color-success);
+            font-weight: 700;
+        }
+
+        /* Disclaimer Styling */
+        .disclaimer-box {
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(244, 63, 94, 0.04);
+            border: 1px solid rgba(244, 63, 94, 0.15);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+                padding: 0 24px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+            header {
+                padding: 0 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                margin-top: 80px;
+                padding: 0 16px;
+                gap: 20px;
+            }
+            .sidebar {
+                display: none; /* スマホでは目次を非表示にして読みやすさを最優先 */
+            }
+            .hero-banner {
+                padding: 24px 20px;
+            }
+            .hero-title {
+                font-size: 22px;
+                line-height: 1.4;
+            }
+            .glass-card {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+            .section-content p {
+                font-size: 17.5px; /* 読み上げ用に文字を大きく */
+                line-height: 2.0; /* 行間を広げて視認性向上 */
+                margin-bottom: 24px;
+            }
+            .intro-box {
+                padding: 16px;
+                margin: 20px 0;
+            }
+            .intro-box p {
+                font-size: 16.5px;
+            }
+            .point-highlight {
+                padding: 16px;
+            }
+            .point-highlight li {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div id="progress" class="progress-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            KABUMARU <span>SCRIPT</span>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>目次 (Chapters)</h3>
+                <ul class="toc-list" id="toc">
+                    <li><a href="#chapter-1">アバンタイトル（導入）</a></li>
+                    <li><a href="#chapter-2">かぶまる自己紹介</a></li>
+                    <li><a href="#chapter-3">第1章：そもそもレゾナックって何者？</a></li>
+                    <li><a href="#chapter-4">第2章：Q1決算の衝撃（利益2.3倍）</a></li>
+                    <li><a href="#chapter-5">第3章：なぜ儲かっているのか？</a></li>
+                    <li><a href="#chapter-6">第4章：構造改革という成長エンジン</a></li>
+                    <li><a href="#chapter-7">第5章：株価と投資スタンス</a></li>
+                    <li><a href="#chapter-8">まとめ：今後の戦略</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Hero Header -->
+            <div class="hero-banner">
+                <span class="hero-badge">YouTubeナレーション用台本</span>
+                <h1 class="hero-title">レゾナック・ホールディングス (4004)<br>台本ナレーション：かぶまる</h1>
+                <div class="hero-meta">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        話し手: かぶまる
+                    </span>
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        文字数: 約3,800文字
+                    </span>
+                </div>
+            </div>
+
+            <!-- Chapter 1 -->
+            <section id="chapter-1" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 01</span>
+                    アバンタイトル（導入）
+                </h2>
+                <div class="section-content">
+                    <p>最近、「日本の化学メーカーって地味だな」って思って、ずっとスルーしてきた銘柄はありませんか？</p>
+                    <p>AIとか半導体って聞くと、つい米国株のNVIDIAとかに目が行きがちですよね。</p>
+                    <div class="intro-box">
+                        <p>でも結論から言います。今、日本株の中でAI半導体の恩恵を最もダイレクトに受けている化学メーカーが存在します。その名前は<strong>レゾナック・ホールディングス、証券コード4004</strong>です。</p>
+                    </div>
+                    <p>「レゾナック？聞いたことないな」って方、それ、完全にチャンスを見逃してます。</p>
+                    <p>この動画では、なぜレゾナックがAI時代のキーマンなのか、直近の決算の何が衝撃的だったのか、そして今から買うべきかどうかの判断軸を、わかりやすく解説していきます。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 2 -->
+            <section id="chapter-2" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 02</span>
+                    かぶまる自己紹介
+                </h2>
+                <div class="section-content">
+                    <p>皆さん、こんにちは。『かぶまる』です。</p>
+                    <p>このチャンネルは、「難しい株式投資を、丸っとわかりやすく」をコンセプトに、日本株や資産運用の話を僕の好き勝手に発信していくチャンネルです。</p>
+                    <p>ここでは、複雑なマーケットのニュースを僕なりに噛み砕いて、皆さんと一緒に「ニュースの背景にある本当の理由」を勉強していくような、そんな知識共有の場にしたいと思っています。</p>
+                    <p>ということで、今回も肩の力を抜いて、最後まで一緒に学んでいきましょう！</p>
+                </div>
+            </section>
+
+            <!-- Chapter 3 -->
+            <section id="chapter-3" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 03</span>
+                    【第1章：そもそもレゾナックって何者？】
+                </h2>
+                <div class="section-content">
+                    <p>まず「レゾナックって何？」ってところから始めましょう。</p>
+                    <p>レゾナックは、<strong>旧・昭和電工と旧・日立化成が合体</strong>して生まれた会社です。2023年に誕生した、まだ社名としては若い会社ですね。</p>
+                    <p>昭和電工といえば、昔から石油化学とか黒鉛電極とか、いわゆる「重厚長大」な素材メーカーのイメージがあります。でも今のレゾナックは、そのイメージとはまったく違う会社に生まれ変わりつつあります。</p>
+                    <p>キーワードは<strong>「半導体・電子材料」へのシフト</strong>です。</p>
+                    <p>簡単に言うと、「地味な化学品を売る会社」から「AIチップを作るために絶対に必要な素材を世界に売る会社」に変わろうとしているわけです。</p>
+                    <p>この転換がどこまで本物かを判断するために、直近の決算を見ると、答えがはっきりわかります。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 4 -->
+            <section id="chapter-4" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 04</span>
+                    【第2章：2026年Q1決算の衝撃、コア営業利益が2.3倍】
+                </h2>
+                <div class="section-content">
+                    <p>では、直近の決算を見てみましょう。2026年5月に発表された2026年12月期の第1四半期決算です。</p>
+                    <p>まずコア営業利益。これが<strong class="purple-strong">三百三十六億円</strong>。前の年の同じ期間と比べて、一・八八倍、率で言うと<strong class="purple-strong">約二・三倍</strong>です。</p>
+                    <p>数字だけ言われてもピンとこないかもしれないので、わかりやすく言います。「去年より利益が倍以上になった」ということです。倍です、倍。</p>
+                    <p>さらに驚くのは、上期の業績予想も同時に大幅に上方修正されたこと。</p>
+                    <div class="point-highlight">
+                        <ul>
+                            <li><strong>コア営業利益の上方修正:</strong> 五百三十億円の予想が七百四十億円に引き上げられました（約四十パーセントの上方修正）。</li>
+                            <li><strong>中間利益の上方修正:</strong> 二百億円の予想が三百八十億円になりました（九十パーセント増し。ほぼ倍ですね）。</li>
+                        </ul>
+                    </div>
+                    <p>「上方修正」というのは、会社が「最初に出した予想より良くなりました」と発表することです。これが特に大きな数字で来ると、市場は「お、思ってたより全然強いじゃないか」と反応して、株価が上がりやすくなります。</p>
+                    <p>今回のレゾナックはまさにそれ。市場にポジティブサプライズを与えた決算でした。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 5 -->
+            <section id="chapter-5" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 05</span>
+                    【第3章：なぜ儲かっているのか？AI半導体の「縁の下の力持ち」】
+                </h2>
+                <div class="section-content">
+                    <p>では、なぜここまで業績が伸びているのか。</p>
+                    <p>最大の理由は<strong>「半導体・電子材料セグメントの急成長」</strong>です。このセグメントの売上高、前年同期比で二十一パーセント増です。</p>
+                    <p>ここで疑問ですよね。「半導体の材料って何？NVIDIA作ってるわけじゃないんでしょ？」って。ここが大事なポイントです。</p>
+                    <p>皆さんがイメージするような半導体チップは、NVIDIAやTSMCが設計・製造します。でもそのチップを最終的に製品として使えるようにするには、<strong>「後工程」</strong>と呼ばれる工程が必要なんです。</p>
+                    <p>後工程というのは、チップを基板に実装して、パッケージングして、製品として出荷できる状態にする工程です。この後工程で使われる材料として、レゾナックは<strong>世界トップクラスのシェア</strong>を持っています。</p>
+                    <p>具体的には、CMPスラリーとか感光性フィルムとか銅張積層板とか、聞いたことない言葉ばかりだと思います。でも飲み会でざっくり説明するなら、「AIチップを作るのに絶対必要な高性能の素材を売ってる会社」です。これで十分伝わります。</p>
+                    <p>AIサーバーの需要が世界中で爆発しているということは、AIチップの製造量が増えるということ。つまりレゾナックの材料の注文が増えるということです。</p>
+                    <p>AIブームの恩恵を間接的に受けるのではなく、製造工程に直結した形で受けているのが、レゾナックの強みです。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 6 -->
+            <section id="chapter-6" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 06</span>
+                    【第4章：構造改革という「もうひとつの成長エンジン」】
+                </h2>
+                <div class="section-content">
+                    <p>もう一つ見逃せないのが、構造改革の進展です。</p>
+                    <p>レゾナックの前身である昭和電工には、石油化学や黒鉛電極といった、昔ながらの事業がありました。これらは原油価格や鉄鋼市場の影響を受けやすく、利益が安定しない事業です。</p>
+                    <p>会社はここ数年でこれらの事業の縮小や売却を進めています。いわゆる<strong>「ポートフォリオの入れ替え」</strong>ですね。地味でボラティリティの高い事業を縮小して、高付加価値な半導体材料に経営資源を集中させる戦略です。</p>
+                    <p>この構造改革が今まさに結果として数字に現れてきている。それが今回の決算の本質だと僕は見ています。</p>
+                    <p>半導体材料が伸びているだけでなく、足を引っ張っていた事業の赤字幅が縮小しているから、利益がドカンと跳ね上がる。この<strong>「二段ロケット」的な利益構造</strong>が、今のレゾナックの面白さです。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 7 -->
+            <section id="chapter-7" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 07</span>
+                    【第5章：株価とバリュエーション、今から買っていいのか？】
+                </h2>
+                <div class="section-content">
+                    <p>では本題です。「今から買えるのか」。</p>
+                    <p>現在の株価は<strong class="green-strong">一万五千九百七十円</strong>です（二〇二六年六月八日時点）。</p>
+                    <p>アナリストの目標株価を見ると、丸三証券が二万三千七百円、SMBC日興証券が一万七千八百円。外資系や日系中堅証券も軒並み二万二千円から二万四千円台に引き上げています。</p>
+                    <p>つまり、最も保守的な目標株価でも現在株価から約十パーセント上、強気目標に向かえば<strong class="green-strong">四十パーセント以上の上昇余地</strong>がある計算です。</p>
+                    <p>PERで見ると、会社予想ベースで約三十七・五倍、アナリストのコンセンサスベースでは約二十四から三十一倍程度。PBRは約四倍です。</p>
+                    <p>「割安か？」と聞かれると、正直「割安とは言えない」水準です。でも「高成長株として正当化できるか？」という問いには、「できる」と答えられる。そこが今のレゾナックの評価の分かれ目です。</p>
+                    <p>ただし正直に言うと、直近の株価は相当な速度で上がっています。一年前から比べると数倍規模の上昇です。短期的な過熱感は否定できません。SMBC日興証券のように「評価拡大にはやや一巡感がある」と慎重な見方をしているアナリストもいます。これは正直な指摘だと思います。</p>
+                    <p>では、どうするか。僕のスタンスは<strong>「押し目買い」</strong>です。</p>
+                    <p>今の株価水準でいきなりフルポジションを取るのではなく、市場全体が調整した時、日経平均が大きく下落した時、そのタイミングで少しずつ拾っていく。まずは打診買いから入って、下がったら追加する。これが今のレゾナックへの合理的なアプローチだと思います。</p>
+                    <p>中期的な目安としては、アナリストコンセンサスの中央値に近い「二万円の大台突破」を一つのターゲットとして見ておくとわかりやすいですね。</p>
+                    <p>リスクも正直に言います。</p>
+                    <div class="point-highlight">
+                        <ul>
+                            <li><strong>株価の過熱感:</strong> 急騰後の銘柄はボラティリティが高い。利益確定売りが入って短期調整する可能性は常にあります。</li>
+                            <li><strong>マクロリスク:</strong> 中東情勢の緊張が続けば原油高になり、石油化学系の事業コストが上がります。構造改革が進んでいるとはいえ、引き続き注視が必要です。</li>
+                            <li><strong>半導体サイクル:</strong> 今はAI向け需要が強烈に引っ張っていますが、AIの設備投資が一服したりすると株価が逆回転するリスクがあります。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 8 -->
+            <section id="chapter-8" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 08</span>
+                    【まとめ：今後の投資スタンスと戦略】
+                </h2>
+                <div class="section-content">
+                    <p>今日の話をざっくりまとめます。</p>
+                    <p>レゾナックは、「古くて地味な化学メーカー」というイメージを完全に脱ぎ捨てつつある会社です。</p>
+                    <p>AI半導体の後工程材料で世界トップクラスのシェアを持ち、直近のQ1決算ではコア営業利益が前年比二・三倍。上期の業績予想もほぼ九十パーセント増という大幅上方修正を発表しました。</p>
+                    <p>AIブームの恩恵を、製造工程の核心部分で直接受けているという構造は、中長期の成長ストーリーとして極めて強固です。</p>
+                    <p>一方で株価はすでに急騰しており、短期的な調整リスクは意識しておく必要があります。</p>
+                    <p>戦略としては<strong>「焦って飛び乗らず、押し目を狙う」</strong>。まず小さく入って、調整局面で拾い増しするのがベストだと思います。</p>
+                    <p>それで、皆さんはどう思いますか？レゾナックはポートフォリオに入れるべきか、まだ様子見か。コメントで教えてください。</p>
+                    <p>あと、「この銘柄も分析してほしい」っていうリクエストもどんどん来てください。チャンネル登録と高評価、よろしくお願いします。</p>
+                </div>
+            </section>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer-box">
+                <strong>【免責事項】</strong> 本動画は情報提供を目的としたものであり、特定の有価証券の売買を推奨するものではありません。投資の最終判断は自己責任でお願いします。
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 KABUMARU. All rights reserved.
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+
+        // IntersectionObserver for active section highlighting
+        const observerOptions = {
+            root: null,
+            threshold: 0.15,
+            rootMargin: '0px 0px -40% 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.toc-list li').forEach(li => {
+                        li.classList.remove('active');
+                        const link = li.querySelector('a');
+                        if (link && link.getAttribute('href') === '#' + id) {
+                            li.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-section').forEach(section => {
+            observer.observe(section);
+            // Initially check visibility
+            if (section.getBoundingClientRect().top < window.innerHeight) {
+                section.classList.add('visible');
+            }
+        });
+    </script>
+</body>
+</html>

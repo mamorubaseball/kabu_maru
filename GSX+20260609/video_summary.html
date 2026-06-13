@@ -1,0 +1,335 @@
+はい、承知いたしました。
+プロのWebデザイナー兼アナリストとして、ご提供いただいた台本から、動画の内容が一目でわかるモダンで美しいHTMLレポートを生成します。
+
+以下に、要件に従って作成した完全なHTMLコードを記載します。
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>グローバルセキュリティエキスパート(4417) 徹底分析レポート</title>
+    <style>
+        /* ===== 基本スタイル & ダークモード ===== */
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --accent-color: #00bfff; /* Deep Sky Blue */
+            --highlight-positive: #4caf50; /* Green */
+            --highlight-negative: #f44336; /* Red */
+            --highlight-info: #ffc107; /* Amber */
+            --border-color: #333333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-text-color);
+            font-family: 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* ===== レイアウト ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8em;
+            color: var(--secondary-text-color);
+        }
+
+        /* ===== タイポグラフィ & 強調 ===== */
+        h1 {
+            font-size: 2.8rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: var(--secondary-text-color);
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: var(--accent-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 12px;
+        }
+
+        .highlight-value {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .highlight-number { color: var(--highlight-positive); }
+        .highlight-company { color: var(--highlight-info); }
+        .highlight-ticker {
+            background-color: var(--border-color);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.95em;
+        }
+        .highlight-keyword {
+            background-color: rgba(0, 191, 255, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* ===== カードレイアウト ===== */
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card ul {
+            padding-left: 20px;
+            list-style: none;
+        }
+
+        .card li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        /* ===== 特殊カード & コンポーネント ===== */
+        .summary-card {
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            text-align: center;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .kpi-item {
+            background-color: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .kpi-label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--secondary-text-color);
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--highlight-positive);
+        }
+        
+        .kpi-growth {
+            font-size: 1.2rem;
+            color: var(--highlight-positive);
+            margin-left: 5px;
+        }
+
+        .critical-point-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--highlight-info);
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .risk-card h3 {
+             border-left-color: var(--highlight-negative);
+        }
+
+        .risk-card li::before {
+            content: '⚠️';
+            left: -5px;
+        }
+
+        /* ===== レスポンシブ対応 ===== */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.4rem; }
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .kpi-value {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>グローバルセキュリティエキスパート <span class="highlight-ticker">4417</span> 徹底分析レポート</h1>
+            <p>アナリスト: かぶまる | 作成日: 2026年6月</p>
+        </header>
+
+        <main>
+            <!-- 導入 & 結論サマリー -->
+            <section class="card summary-card">
+                <h2>AI時代のマストハブ銘柄、そのポテンシャルとは？</h2>
+                <p>生成AIの波に乗りたいが、高値銘柄は避けたい。そんな投資家の悩みに応える、これからの時代に必要不可欠なお宝銘柄を分析。AIの普及がもたらす新たな需要を捉え、株価倍増のポテンシャルを秘めた企業、それが<span class="highlight-company">グローバルセキュリティエキスパート</span>です。</p>
+                <div class="kpi-grid">
+                    <div class="kpi-item">
+                        <span class="kpi-label">目標株価 (東海東京証券)</span>
+                        <span class="kpi-value" style="color: var(--accent-color);">5,800円</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-label">株価上昇余地 (Upside)</span>
+                        <span class="kpi-value" style="color: var(--accent-color);">+89.5%</span>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="grid-container">
+                <!-- 背景 -->
+                <article class="card">
+                    <h3>背景：AI普及がもたらす新たな脅威</h3>
+                    <p>生成AIの業務利用が加速する一方、<span class="highlight-keyword">プロンプトインジェクション</span>や<span class="highlight-keyword">プロンプトリーク</span>といったAI特有のサイバー攻撃が急増。従来のセキュリティ対策では防げないこれらの脅威に対し、AI専用のセキュリティ対策が「企業の必須条件」となりつつあります。</p>
+                </article>
+
+                <!-- 企業概要 -->
+                <article class="card">
+                    <h3>企業概要：サイバーセキュリティ教育カンパニー</h3>
+                    <p><span class="highlight-company">グローバルセキュリティエキスパート（GSX）</span>は、セキュリティ人材の「教育」から脆弱性「診断」、24時間365日の「監視(MDR)」までを一気通貫で提供。特に、専門部署を持てない<strong>日本の中堅・中小企業</strong>をターゲットとし、伴走型のサービスで高い顧客継続率を誇ります。</p>
+                </article>
+
+                <!-- AI時代の戦略 -->
+                <article class="card">
+                    <h3>AI時代の戦略：需要を捉えた新サービス</h3>
+                    <p>GSXは市場のニーズを迅速に捉え、複数の戦略的施策を発表しています。</p>
+                    <ul>
+                        <li><strong>新サービス「AIプロンプト診断」</strong><br>2026年5月27日リリース。生成AIを組み込んだサービスの安全性をリリース前に診断し、企業の信頼失墜リスクを低減。</li>
+                        <li><strong>「コーワーカー社」との業務提携</strong><br>AIセキュリティの最先端技術を持つスタートアップとの提携により、診断業務のAI自動化を推進。売上拡大と利益率向上を両立させる鍵となります。</li>
+                    </ul>
+                </article>
+
+                <!-- 業績ハイライト -->
+                <article class="card">
+                    <h3>業績ハイライト：9期連続の最高益更新へ</h3>
+                    <p>一時的なブームではない、実需に裏打ちされた圧倒的な成長力を誇ります。</p>
+                    <div style="margin-bottom: 20px;">
+                        <span class="kpi-label">2026年3月期 経常利益 (実績)</span>
+                        <span class="highlight-value highlight-number">22.2億円</span>
+                        <span class="kpi-growth">(前期比 +42.3%)</span>
+                    </div>
+                    <div>
+                        <span class="kpi-label">2027年3月期 経常利益 (会社予想)</span>
+                        <span class="highlight-value highlight-number">29.7億円</span>
+                        <span class="kpi-growth">(前期比 +33.8%)</span>
+                    </div>
+                </article>
+
+                <!-- 需給の臨界点 -->
+                <article class="card critical-point-card">
+                    <h3>かぶまるの視点①：時価総額500億円の壁</h3>
+                    <p>現在の時価総額は約<span class="highlight-value highlight-company">475億円</span>。日本の株式市場では、時価総額が<span class="highlight-keyword">500億円</span>を超えると、これまで投資対象外としていた多くの機関投資家の買いが期待できます。まさに株価が飛躍する「臨界点」の直前に位置している点が非常に魅力的です。</p>
+                    <span class="kpi-label">臨界点まであとわずか</span>
+                    <div class="value">500億円</div>
+                </article>
+
+                <!-- 投資リスク -->
+                <article class="card risk-card">
+                    <h3>かぶまるの視点②：注意すべき投資リスク</h3>
+                    <p>期待値は高いものの、以下のリスクは念頭に置く必要があります。</p>
+                    <ul>
+                        <li><strong>採用リスク</strong><br>事業拡大には優秀なエンジニアの確保が不可欠。採用競争の激化による人件費高騰が利益を圧迫する可能性があります。</li>
+                        <li><strong>レピュテーションリスク</strong><br>セキュリティ企業自身のハッキング被害は信用の失墜に直結。自社の防御体制が常に問われます。</li>
+                    </ul>
+                </article>
+            </div>
+
+            <!-- まとめ -->
+            <section class="card">
+                <h2>まとめ：今後の投資スタンスと戦略</h2>
+                <p>PER等の指標面でも成長率を鑑みれば割高感はなく、中長期的な視点で非常に魅力的な水準と考えられます。</p>
+                <ul>
+                    <li><strong>圧倒的な成長性</strong>：9期連続の過去最高益更新見通しが示す安定感。</li>
+                    <li><strong>AI需要の獲得</strong>：時流に乗った「AIプロンプト診断」とAI自動化による収益性向上。</li>
+                    <li><strong>需給妙味</strong>：機関投資家の参入トリガーとなる「時価総額500億円」手前の好立地。</li>
+                </ul>
+                <p>現在の株価 <span class="highlight-value" style="color:var(--secondary-text-color)">3,000円台前半</span>は、目標株価 <span class="highlight-value highlight-number">5,800円</span>を目指す上で、日々の値動きを見ながら分割で買い進めるのに適した「魅力的な仕込み場」と分析します。</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>【免責事項】</p>
+            <p>本レポートは情報提供を目的としたものであり、特定の有価証券の売買を推奨するものではありません。投資の最終判断は自己責任でお願いします。</p>
+            <p>&copy; 2026 かぶまる</p>
+        </footer>
+    </div>
+
+</body>
+</html>

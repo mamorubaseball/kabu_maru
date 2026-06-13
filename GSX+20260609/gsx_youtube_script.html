@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【YouTube台本】グローバルセキュリティエキスパート（4417）徹底分析</title>
+    <meta name="description" content="グローバルセキュリティエキスパート（4417）のYouTube解説用ナレーション読み上げ台本。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #040810;
+            --bg-secondary: #0b1120;
+            --bg-card: rgba(15, 23, 42, 0.55);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --color-accent: #00f2fe; /* Cyber Cyan */
+            --color-accent-rgb: 0, 242, 254;
+            --color-secondary: #a18cd1; /* Purple */
+            --color-success: #10b981; /* Emerald */
+            --color-warning: #fbbf24; /* Amber */
+            --color-danger: #f43f5e; /* Rose */
+            --gradient-primary: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #a18cd1 100%);
+            --font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+            --font-display: 'Outfit', 'Noto Sans JP', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(4, 8, 16, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 999;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 22px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            font-size: 13px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--color-accent);
+            -webkit-text-fill-color: var(--color-accent);
+            font-family: var(--font-sans);
+            font-weight: 600;
+        }
+
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 110px auto 40px;
+            padding: 0 40px;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            position: sticky;
+            top: 110px;
+            height: calc(100vh - 150px);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .sidebar h3 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-list li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-list li a:hover,
+        .toc-list li.active a {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+            border-left-color: var(--color-accent);
+            padding-left: 18px;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 940px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            padding: 48px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(11, 17, 32, 0.9) 0%, rgba(4, 8, 16, 0.95) 100%);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            align-self: flex-start;
+            padding: 6px 14px;
+            border-radius: 99px;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--color-accent);
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.35;
+            letter-spacing: -0.5px;
+            z-index: 1;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            z-index: 1;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Glassmorphism Section Card */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 242, 254, 0.15);
+        }
+
+        .content-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-num {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .section-content p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+            text-align: justify;
+            text-justify: inter-character;
+        }
+
+        /* Intro Text Box Styling */
+        .intro-box {
+            background: rgba(0, 242, 254, 0.03);
+            border-left: 4px solid var(--color-accent);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+
+        .intro-box p {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 0;
+        }
+
+        /* Highlight point */
+        .point-highlight {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .point-highlight ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .point-highlight li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .point-highlight li::before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--color-accent);
+            font-size: 18px;
+        }
+
+        /* Disclaimer Styling */
+        .disclaimer-box {
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(244, 63, 94, 0.04);
+            border: 1px solid rgba(244, 63, 94, 0.15);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+                padding: 0 24px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+            header {
+                padding: 0 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                margin-top: 80px;
+                padding: 0 16px;
+                gap: 20px;
+            }
+            .sidebar {
+                display: none; /* スマホでは目次を非表示にして読みやすさを最優先 */
+            }
+            .hero-banner {
+                padding: 24px 20px;
+            }
+            .hero-title {
+                font-size: 22px;
+                line-height: 1.4;
+            }
+            .glass-card {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+            .section-content p {
+                font-size: 17.5px; /* 読み上げ用に文字を大きく */
+                line-height: 2.0; /* 行間を広げて視認性向上 */
+                margin-bottom: 24px;
+            }
+            .intro-box {
+                padding: 16px;
+                margin: 20px 0;
+            }
+            .intro-box p {
+                font-size: 16.5px;
+            }
+            .point-highlight {
+                padding: 16px;
+            }
+            .point-highlight li {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div id="progress" class="progress-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            KABUMARU <span>SCRIPT</span>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>目次 (Chapters)</h3>
+                <ul class="toc-list" id="toc">
+                    <li><a href="#chapter-1">アバンタイトル（導入）</a></li>
+                    <li><a href="#chapter-2">かぶまる自己紹介</a></li>
+                    <li><a href="#chapter-3">背景・前提 ― AIの普及と危機</a></li>
+                    <li><a href="#chapter-4">銘柄分析① ― 会社概要</a></li>
+                    <li><a href="#chapter-5">銘柄分析② ― AI時代に必要な理由</a></li>
+                    <li><a href="#chapter-6">かぶまるの視点 ― 500億円の壁</a></li>
+                    <li><a href="#chapter-7">まとめ ― 投資戦略</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Hero Header -->
+            <div class="hero-banner">
+                <span class="hero-badge">YouTubeナレーション用台本</span>
+                <h1 class="hero-title">グローバルセキュリティエキスパート (4417)<br>台本ナレーション：かぶまる</h1>
+                <div class="hero-meta">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        話し手: かぶまる
+                    </span>
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        文字数: 約3,850文字 (約10分)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Chapter 1 -->
+            <section id="chapter-1" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 01</span>
+                    アバンタイトル（導入）
+                </h2>
+                <div class="section-content">
+                    <p>最近こんな悩み、ありませんか？</p>
+                    <div class="intro-box">
+                        <p>「ニュースで生成AIとかAI関連株がめちゃくちゃ盛り上がっているけど、今からエヌビディアとかを買うのはちょっと怖いな。もっと身近な日本株で、これからのAI時代に絶対に必要とされる、お宝銘柄ってないのかな？」</p>
+                    </div>
+                    <p>うん、わかります。AIの波に乗りたいけれど、すでに高値になっている銘柄に飛び込むのは勇気がいりますよね。</p>
+                    <p>結論から言います。これからのAI時代に必要不可欠で、かつ株価がほぼ倍増するポテンシャルを秘めた大本命銘柄があります。それが、グローバルセキュリティエキスパート、証券コード四四一七です。</p>
+                    <p>この動画では、なぜこの会社が今のAI時代にどうしても必要なのかという具体的な理由から、目標株価五千八百円という驚異的なアップサイドの裏付け、割安さの真実、そして今後株価が一気に跳ね上がるかもしれない『ある臨界点』について、数字と事実をもとに分かりやすく解説していきます。最後まで見てもらえれば、この銘柄に対して自分なりの投資スタンスをしっかり決められるようになりますよ。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 2 -->
+            <section id="chapter-2" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 02</span>
+                    かぶまる自己紹介
+                </h2>
+                <div class="section-content">
+                    <p>皆さん、こんにちは。『かぶまる』です。</p>
+                    <p>このチャンネルは、「難しい株式投資を、丸っとわかりやすく」をコンセプトに、日本株や資産運用の話を僕の好き勝手に発信していくチャンネルです。</p>
+                    <p>ここでは、複雑なマーケットのニュースを僕なりに噛み砕いて、皆さんと一緒に「ニュースの背景にある本当の理由」を勉強していくような、そんな知識共有の場にしたいと思っています。</p>
+                    <p>ということで、今回も肩の力を抜いて、最後まで一緒に学んでいきましょう！</p>
+                </div>
+            </section>
+
+            <!-- Chapter 3 -->
+            <section id="chapter-3" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 03</span>
+                    背景・前提 ― AIの普及がもたらすセキュリティの危機
+                </h2>
+                <div class="section-content">
+                    <p>じゃあ本題に入りましょう。</p>
+                    <p>まず、なぜ今セキュリティ銘柄なのか、その背景から整理していきましょう。</p>
+                    <p>今って、猫も杓子も「生成AI」ですよね。チャットGPTとか、GoogleのGeminiとか、仕事で使っている人もかなり増えてきたと思います。実際、たくさんの企業が「うちの社内システムにもAIを組み込んで、業務を効率化しよう！」と急いで動いています。</p>
+                    <p>でもね、ここで大きな問題が出てくるんです。AIが便利になればなるほど、実は新しいサイバー攻撃のやり方も生まれてしまっているんですよ。</p>
+                    <p>例えば「プロンプトインジェクション」という言葉、聞いたことありますか？</p>
+                    <p>これは、AIシステムに対して意図的に悪意のある命令を入力して、AIを騙して本来言ってはいけない秘密情報を喋らせたり、システムを乗っ取ったりする攻撃方法です。他にも、AIの設計図や社外秘のデータを無理やり引き出す「プロンプトリーク」なんていう手法もあります。</p>
+                    <p>これ、実は従来のセキュリティ対策ソフトでは防げないんです。AIという新しい技術だからこそ、セキュリティの守り方も新しくしなければいけない。</p>
+                    <p>つまり、これからのAI時代は、AIを導入する企業が増えれば増えるほど、AI専用のセキュリティ対策が必要不可欠になる、というわけです。セキュリティは「余裕があればやるもの」ではなく、AIを使うための「絶対に必要な前提条件」になっているんですね。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 4 -->
+            <section id="chapter-4" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 04</span>
+                    銘柄分析① ― グローバルセキュリティエキスパートってどんな会社？
+                </h2>
+                <div class="section-content">
+                    <p>では、今回紹介するグローバルセキュリティエキスパート、通称「ジーエスエックス」がどんな会社なのかを見てみましょう。</p>
+                    <p>この会社は、一言で言うと「サイバーセキュリティ教育カンパニー」です。</p>
+                    <p>日本のセキュリティ企業って、ウイルス対策ソフトを販売する代理店だったり、システムの構築をする会社が多いんですが、ジーエスエックスはちょっと違います。彼らの最大の特徴は、セキュリティに関わる「人の教育」から「実際の対策」までを一気通貫で提供している点です。</p>
+                    <p>主なターゲットは、日本の中堅・中小企業、そして地域のIT企業やSIerと呼ばれるシステム開発会社です。</p>
+                    <p>大企業ならね、お金もあるし「セキュリティ専門部署」を作って優秀なエンジニアを雇うことができます。でも、日本企業の九十九パーセントを占める中堅・中小企業には、そんな余裕はありませんよね。「専任の担当者なんていないし、何をどう守ればいいか分からない」というのが本音です。</p>
+                    <p>そこにジーエスエックスが寄り添うわけです。</p>
+                    <p>まず、顧客企業の社員向けにセキュリティ資格の取得講座を開いたり、メールの訓練をしたりして「セキュリティに強い人材」を社内で育てます。これが「教育」のステップです。</p>
+                    <p>そして次に、その企業のシステムやWebアプリに弱点がないかを調べる「脆弱性診断」を行い、さらに「クラウドストライク」などの最新の防犯システムを導入して、代わりに二十四時間三百六十五日、監視の目を光らせる「エムディーアール」と呼ばれる監視サービスを提供します。</p>
+                    <p>この「教育」で顧客の懐に入り込み、そこから「診断」や「監視」といった実務を芋づる式に獲得していくビジネスモデルが、めちゃくちゃ強いんですよ。中堅・中小企業の「困った」を丸ごと解決する伴走型だからこそ、顧客との関係が非常に長く続くわけです。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 5 -->
+            <section id="chapter-5" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 05</span>
+                    銘柄分析② ― 今のAI時代に本当に必要なのか？新サービスを徹底分析
+                </h2>
+                <div class="section-content">
+                    <p>「教育が強いのは分かった。じゃあ、今のAI時代にはどう関わっているの？」と思いますよね。ここが一番のポイントです。</p>
+                    <p>実はジーエスエックス、二〇二六年五月二十七日に、まさに今の時代にど真ん中で必要な新サービスをリリースしました。それが「AIプロンプト診断（AI Prompt Security）」です。</p>
+                    <p>先ほどお話しした、AI特有の脆弱性であるプロンプトインジェクションなどを、国際的な基準に沿って徹底的に診断するサービスです。</p>
+                    <p>これから生成AIを使ったサービスを世の中に出そうとしている企業にとって、もしリリースした後にAIが暴走したり、顧客の個人情報を漏洩してしまったりしたら、会社の信用は一発で失墜してしまいますよね。だから、リリース前にこの「AIプロンプト診断」を受けて安全性を確かめることが、これから企業にとって「必須の通過儀礼」になるわけです。この動きをいち早く察知してサービス化したスピード感は、さすがと言わざるを得ません。</p>
+                    <p>さらに、二〇二六年五月には、AIセキュリティの最先端技術を持つスタートアップ企業「コーワーカー社」と戦略的な業務提携も発表しています。</p>
+                    <p>これにより、これまで人間のエンジニアが手作業で行っていたシステム診断の一部をAIで自動化する取り組みを進めています。日本はただでさえセキュリティエンジニアが圧倒的に不足していますから、診断をAIで自動化できれば、人手をかけずにたくさんの案件をこなせるようになります。つまり、売上をどんどん伸ばしながら、利益率をさらに高めていくことができるというわけです。</p>
+                    <p>この成長力は、すでに業績の数字にもはっきりと表れています。</p>
+                    <p>直近の二〇二六年三月期の決算では、経常利益が前の期と比べて四十二・三パーセント増えて二十二億二千万円になり、過去最高益を更新しました。さらに、今期である二〇二七年三月期の会社予想では、そこからさらに三十三・八パーセント増えて二十九億七千万円を見込んでいます。</p>
+                    <p>なんと、これで「九期連続での過去最高益更新」の見通しなんですよ。一時的なブームではなく、実需を伴ってこれだけの勢いで成長しているテック企業は、日本市場を見渡してもかなり珍しい存在です。</p>
+                </div>
+            </section>
+
+            <!-- Chapter 6 -->
+            <section id="chapter-6" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 06</span>
+                    かぶまるの視点 ― 時価総額500億円の壁とアップサイド+89.5%の裏側
+                </h2>
+                <div class="section-content">
+                    <p>さて、ここからは僕の視点、客観的なデータに基づいた投資判断のポイントをお話しします。</p>
+                    <p>この銘柄を考える上で、非常に面白いポイントが二つあります。</p>
+                    <p>一つ目は、東海東京証券が二〇二六年六月五日付で発表したレポートです。ここで目標株価を、現在の株価三千六十円に対して、なんと「五千八百円」に引き上げました。</p>
+                    <p>アップサイド、つまり上昇余地はプラス八十九・五パーセント。約二倍になる計算です。評価された理由は、今お話ししたような「AIの進化を成長のガソリンにした業績の拡大」です。証券会社のアナリストも、ジーエスエックスのAIセキュリティ戦略が今後の業績を大きく引っ張るということを確信しているわけですね。</p>
+                    <p>そして二つ目のポイントが、受給構造の変化、すなわち「時価総額五百億円の壁」です。ここ、凄く大事なので一緒に考えてみましょう。</p>
+                    <p>今のジーエスエックスの時価総額は、およそ四百七十五億円です。</p>
+                    <p>実は、日本の株式市場では、時価総額が「五百億円」を超えると、世界が変わるんです。</p>
+                    <p>多くの機関投資家、例えば年金基金を運用するファンドや、海外の大きな投資信託などは、あまりに規模が小さい株は流動性が低くて売り買いしにくいため、「時価総額五百億円以上」という厳しいフィルターをかけて、最初から投資対象から除外しています。つまり、買いたくてもルール上買えない状態なんです。</p>
+                    <p>しかし、株価がもう一段上がって、時価総額が五百億円を安定的に超えてくるとどうなるでしょう？</p>
+                    <p>これらの機関投資家のシステムに「購入可能銘柄」として一斉に登録されるようになります。これまで買えなかった大口の買い手がドカンと参入してくることになるため、買いが買いを呼ぶ形になって、株価が一気に押し上げられる可能性が極めて高いんです。</p>
+                    <p>今の四百七十五億円という規模は、まさにその「臨界点」の直前にいる状態なんです。このタイミングで仕込んでおくというのは、投資の期待値としては非常に面白いアプローチだと僕は考えています。</p>
+                    <p>ただし、注意しておきたいポイントも二つあります。</p>
+                    <div class="point-highlight">
+                        <ul>
+                            <li><strong>自社の採用リスク:</strong> 世の中のセキュリティ人材不足がジーエスエックスの稼ぎ時になっている一方で、ジーエスエックス自身も技術者を獲得し続けなければなりません。採用コストの高騰が利益率を圧迫するリスクがあります（CoWorker社との提携によるAI自動化が鍵になります）。</li>
+                            <li><strong>レピュテーションリスク:</strong> セキュリティを売りにしている会社ですから、万が一にも自社や主要顧客のところで重大なハッキング事故が起きたら看板に泥を塗ることになります。このリスクは常に頭の片隅に置いておく必要があります。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 7 -->
+            <section id="chapter-7" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 07</span>
+                    まとめ ― 今後の投資スタンスと戦略
+                </h2>
+                <div class="section-content">
+                    <p>最後にまとめましょう。</p>
+                    <p>グローバルセキュリティエキスパート（4417）、PERなどの指標で見ても成長率を考えれば決して割高ではありません。</p>
+                    <div class="intro-box">
+                        <p>• 九期連続の過去最高益更新見通しという圧倒的な安定成長<br>
+                        • 生成AIの普及に伴う「AIプロンプト診断」の開始とAI自動化による高い収益性<br>
+                        • 機関投資家が参入してくるトリガーとなる「時価総額五百億円」の手前という好立地</p>
+                    </div>
+                    <p>これらを総合的に考えると、現在の三千円台前半という水準は、中長期で目標株価五千八百円を目指す上での「非常に魅力的な仕込み場」ではないかと考えています。</p>
+                    <p>一気に一括で買うというよりは、日々の株価の波を見ながら、少しずつ買い下がっていくような丁寧なアプローチがうまく機能しそうですよね。</p>
+                    <p>皆さんは、このジーエスエックスについてどう思いますか？「AIセキュリティは本当に伸びる！」と思うか、「やっぱり採用難がネックになるかも」と思うか、ぜひ皆さんの率直な意見をコメント欄で教えてください。もちろん、「他にもこんな面白いセキュリティ銘柄があるよ！」というおすすめがあれば、ぜひコメントで共有してもらえると嬉しいです。皆さんの知識を合わせて、みんなで賢く投資していきましょう。</p>
+                    <p>今日はグローバルセキュリティエキスパート、証券コード四四一七を分析しました。</p>
+                </div>
+            </section>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer-box">
+                <strong>【免責事項】</strong> 本コンテンツは情報提供を目的としたものであり、特定の有価証券の売買を推奨するものではありません。投資の最終判断は自己責任でお願いします。
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 KABUMARU. All rights reserved.
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+
+        // IntersectionObserver for active section highlighting
+        const observerOptions = {
+            root: null,
+            threshold: 0.15,
+            rootMargin: '0px 0px -40% 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.toc-list li').forEach(li => {
+                        li.classList.remove('active');
+                        const link = li.querySelector('a');
+                        if (link && link.getAttribute('href') === '#' + id) {
+                            li.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-section').forEach(section => {
+            observer.observe(section);
+            // Initially check visibility
+            if (section.getBoundingClientRect().top < window.innerHeight) {
+                section.classList.add('visible');
+            }
+        });
+    </script>
+</body>
+</html>

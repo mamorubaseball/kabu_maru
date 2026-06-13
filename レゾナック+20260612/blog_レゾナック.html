@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="レゾナック・ホールディングス（4004）を徹底分析。AI半導体後工程材料で世界トップクラスのシェアを持ち、2026年Q1決算でコア営業利益が前年比2.3倍を達成。時価総額・バリュエーション・リスクを「かぶまる」視点で解説。">
+  <title>レゾナック（4004）AIが加速させる「縁の下の力持ち」株 - かぶまる</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&family=Noto+Sans+JP:wght@300;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #050510;
+      --bg-gradient: linear-gradient(180deg, #0a0a1a 0%, #050510 100%);
+      --primary: #00f2fe;
+      --secondary: #4facfe;
+      --accent: #b06ab3;
+      --text-main: #ffffff;
+      --text-muted: #a0a0b0;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-muted);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ─── Header ─── */
+    header {
+      padding: 120px 0 80px;
+      text-align: center;
+    }
+
+    .label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      padding: 4px 14px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: rgba(160,160,176,0.6);
+    }
+
+    /* ─── KPI Cards ─── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 48px 0 80px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border-color: rgba(0,242,254,0.25);
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .kpi-sub {
+      font-size: 0.72rem;
+      color: rgba(160,160,176,0.6);
+      margin-top: 6px;
+    }
+
+    /* ─── TOC ─── */
+    .toc {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 80px;
+      backdrop-filter: blur(10px);
+    }
+
+    .toc-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .toc ol {
+      padding-left: 20px;
+    }
+
+    .toc li {
+      margin-bottom: 8px;
+    }
+
+    .toc a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .toc a:hover { color: var(--primary); }
+
+    /* ─── Sections ─── */
+    section {
+      margin-bottom: 80px;
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      border-left: 4px solid var(--primary);
+      padding-left: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border-color: rgba(0,242,254,0.25);
+    }
+
+    .card p {
+      margin-bottom: 1em;
+    }
+
+    .card p:last-child { margin-bottom: 0; }
+
+    /* ─── Inline highlights ─── */
+    .ticker {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .highlight {
+      color: var(--primary);
+      font-size: 1.05em;
+      font-weight: 700;
+    }
+
+    .highlight-up {
+      color: #4ade80;
+      font-weight: 700;
+    }
+
+    /* ─── Risk box ─── */
+    .risk-box {
+      background: rgba(255, 100, 100, 0.06);
+      border-left: 4px solid #ff6464;
+      border-radius: 0 12px 12px 0;
+      padding: 20px 24px;
+      margin-top: 20px;
+    }
+
+    .risk-box h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ff8a8a;
+      margin-bottom: 12px;
+    }
+
+    .risk-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    .risk-item:last-child { margin-bottom: 0; }
+
+    .risk-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: rgba(255,100,100,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #ff8a8a;
+    }
+
+    /* ─── Stance box ─── */
+    .stance-box {
+      background: rgba(0, 242, 254, 0.05);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-top: 24px;
+    }
+
+    .stance-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .stance-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ─── Summary list ─── */
+    .summary-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .summary-list li {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-size: 0.97rem;
+    }
+
+    .summary-list li::before {
+      content: "✓";
+      flex-shrink: 0;
+      color: var(--primary);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* ─── CTA ─── */
+    .cta {
+      text-align: center;
+      padding: 48px 0 32px;
+      border-top: 1px solid var(--card-border);
+      margin-top: 80px;
+    }
+
+    .cta p {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .cta .sub { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* ─── Footer ─── */
+    footer {
+      padding: 40px 0 60px;
+      text-align: center;
+    }
+
+    .disclaimer {
+      font-size: 0.78rem;
+      color: rgba(160,160,176,0.5);
+      max-width: 600px;
+      margin: 0 auto 12px;
+      line-height: 1.6;
+    }
+
+    .copyright {
+      font-size: 0.75rem;
+      color: rgba(160,160,176,0.3);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      h2 { font-size: 1.4rem; }
+      header { padding: 80px 0 50px; }
+      .container { padding: 0 1rem; }
+      .card { padding: 20px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ─── Header ─── -->
+  <header>
+    <div class="label">日本株分析 / かぶまる</div>
+    <h1>レゾナック（4004）<br>AIが加速させる「縁の下の力持ち」株</h1>
+    <p class="subtitle">AI半導体後工程材料で世界トップクラス ── 9期連続最高益更新への布石</p>
+    <p class="meta">2026年6月 | かぶまる</p>
+  </header>
+
+  <!-- ─── KPI ─── -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">現在株価</div>
+      <div class="kpi-value">15,970<span style="font-size:1rem">円</span></div>
+      <div class="kpi-sub">2026年6月8日時点</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">コア営業利益 前年比</div>
+      <div class="kpi-value" style="color:#4ade80">+2.3倍</div>
+      <div class="kpi-sub">2026年Q1（336億円）</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">上期中間利益 修正幅</div>
+      <div class="kpi-value" style="color:#4ade80">+90%</div>
+      <div class="kpi-sub">200億→380億円へ</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">目標株価（強気）</div>
+      <div class="kpi-value">23,700<span style="font-size:1rem">円</span></div>
+      <div class="kpi-sub">丸三証券 ── アップサイド +48%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">PER（コンセンサス）</div>
+      <div class="kpi-value">24〜31<span style="font-size:1rem">倍</span></div>
+      <div class="kpi-sub">PBR 約4倍</div>
+    </div>
+  </div>
+
+  <!-- ─── TOC ─── -->
+  <nav class="toc">
+    <div class="toc-title">▼ 目次</div>
+    <ol>
+      <li><a href="#chapter-1">そもそもレゾナックって何者？</a></li>
+      <li><a href="#chapter-2">2026年Q1決算の衝撃 ── コア営業利益が2.3倍</a></li>
+      <li><a href="#chapter-3">なぜ儲かっているのか？ AI半導体の「縁の下の力持ち」</a></li>
+      <li><a href="#chapter-4">構造改革という「もうひとつの成長エンジン」</a></li>
+      <li><a href="#chapter-5">株価とバリュエーション ── 今から買っていいのか？</a></li>
+      <li><a href="#chapter-6">まとめ ── 今後の投資スタンスと戦略</a></li>
+    </ol>
+  </nav>
+
+  <!-- ─── Chapter 1 ─── -->
+  <section id="chapter-1">
+    <h2>第1章：そもそもレゾナックって何者？</h2>
+    <div class="card">
+      <p>レゾナックは、旧・<strong>昭和電工</strong>と旧・<strong>日立化成</strong>が合体して生まれた会社です。2023年に誕生した、まだ社名としては若い会社ですね。</p>
+      <p>昭和電工といえば、昔から石油化学とか黒鉛電極とか、いわゆる「重厚長大」な素材メーカーのイメージがあります。でも今のレゾナックは、そのイメージとはまったく違う会社に生まれ変わりつつあります。</p>
+      <p>キーワードは<span class="highlight">「半導体・電子材料へのシフト」</span>です。</p>
+      <p>簡単に言うと、「地味な化学品を売る会社」から「AIチップを作るために絶対に必要な素材を世界に売る会社」に変わろうとしているわけです。</p>
+      <p>この転換がどこまで本物かを判断するために、直近の決算を見ると、答えがはっきりわかります。</p>
+    </div>
+  </section>
+
+  <!-- ─── Chapter 2 ─── -->
+  <section id="chapter-2">
+    <h2>第2章：2026年Q1決算の衝撃 ── コア営業利益が2.3倍</h2>
+    <div class="card">
+      <p>2026年5月に発表された2026年12月期の第1四半期決算を見てみましょう。</p>
+      <p>まずコア営業利益。これが<span class="highlight">三百三十六億円</span>。前の年の同じ期間と比べて、<span class="highlight-up">一・八八倍、率で言うと約二・三倍</span>です。</p>
+      <p>「去年より利益が倍以上になった」ということです。倍です、倍。</p>
+      <p>さらに驚くのは、上期の業績予想も同時に大幅に上方修正されたこと。コア営業利益の修正幅を見ると、<span class="highlight">五百三十億円の予想が七百四十億円</span>に引き上げられました。約<span class="highlight-up">四十パーセントの上方修正</span>です。</p>
+      <p>そして親会社に帰属する中間利益に至っては、<span class="highlight">二百億円の予想が三百八十億円</span>になりました。<span class="highlight-up">九十パーセント増し</span>。ほぼ倍ですよね。</p>
+      <p>今回のレゾナックはまさに市場にポジティブサプライズを与えた決算でした。上方修正というのは市場が「思ってたより全然強いじゃないか」と反応して、株価が上がりやすくなる材料です。</p>
+    </div>
+  </section>
+
+  <!-- ─── Chapter 3 ─── -->
+  <section id="chapter-3">
+    <h2>第3章：なぜ儲かっているのか？ AI半導体の「縁の下の力持ち」</h2>
+    <div class="card">
+      <p>最大の理由は<span class="highlight">「半導体・電子材料セグメントの急成長」</span>です。このセグメントの売上高、<span class="highlight-up">前年同期比で二十一パーセント増</span>です。</p>
+      <p>皆さんがイメージするような半導体チップは、<span class="ticker">NVDA</span>（エヌビディア）や<span class="ticker">TSMC</span>が設計・製造します。でもそのチップを最終的に製品として使えるようにするには、「<strong>後工程</strong>」と呼ばれる工程が必要です。チップを基板に実装して、パッケージングして、製品として出荷できる状態にする工程です。</p>
+      <p><strong>この後工程で使われる材料として、レゾナックは世界トップクラスのシェアを持っています。</strong></p>
+      <p>CMPスラリー・感光性フィルム・銅張積層板…。飲み会でざっくり説明するなら、「AIチップを作るのに絶対必要な高性能の素材を売ってる会社」です。これで十分伝わります。</p>
+      <p>AIサーバーの需要が世界中で爆発しているということは、AIチップの製造量が増えるということ。つまりレゾナックの材料の注文が増えるということです。AIブームの恩恵を間接的にではなく、<span class="highlight">製造工程に直結した形で受けている</span>のが、レゾナックの強みです。</p>
+    </div>
+  </section>
+
+  <!-- ─── Chapter 4 ─── -->
+  <section id="chapter-4">
+    <h2>第4章：構造改革という「もうひとつの成長エンジン」</h2>
+    <div class="card">
+      <p>もう一つ見逃せないのが、構造改革の進展です。</p>
+      <p>レゾナックの前身である昭和電工には、石油化学や黒鉛電極といった、昔ながらの事業がありました。これらは原油価格や鉄鋼市場の影響を受けやすく、利益が安定しない事業です。</p>
+      <p>会社はここ数年でこれらの事業の縮小や売却を進めています。地味でボラティリティの高い事業を縮小して、高付加価値な半導体材料に経営資源を集中させる戦略です。</p>
+      <p>この構造改革が今まさに結果として数字に現れてきている。それが今回の決算の本質だと思っています。</p>
+      <p>半導体材料が伸びているだけでなく、足を引っ張っていた事業の赤字幅が縮小しているから、利益がドカンと跳ね上がる。この<span class="highlight">「二段ロケット」的な利益構造</span>が、今のレゾナックの面白さです。</p>
+    </div>
+  </section>
+
+  <!-- ─── Chapter 5 ─── -->
+  <section id="chapter-5">
+    <h2>第5章：株価とバリュエーション ── 今から買っていいのか？</h2>
+    <div class="card">
+      <p>現在の株価は<span class="highlight">一万五千九百七十円</span>（2026年6月8日時点）。</p>
+      <p>アナリストの目標株価を見ると、丸三証券が<span class="highlight">二万三千七百円</span>、SMBC日興証券が<span class="highlight">一万七千八百円</span>。外資系・日系中堅証券も軒並み二万二千円から二万四千円台に引き上げています。</p>
+      <p>最も保守的な目標株価でも現在株価から約<span class="highlight-up">十パーセント上</span>、強気目標に向かえば<span class="highlight-up">四十パーセント以上の上昇余地</span>がある計算です。</p>
+      <p>PERで見ると、会社予想ベースで約<span class="highlight">三十七・五倍</span>、アナリストのコンセンサスベースでは約二十四から三十一倍程度。PBRは約四倍。「割安とは言えない」水準ですが、「高成長株として正当化できるか？」という問いには「できる」と答えられる。そこが今のレゾナックの評価の分かれ目です。</p>
+      <p>直近の株価は相当な速度で上がっており、一年前から数倍規模の上昇。短期的な過熱感は否定できません。SMBC日興証券のように「評価拡大にはやや一巡感がある」と慎重な見方をしているアナリストもいます。</p>
+
+      <div class="stance-box">
+        <div class="stance-label">かぶまるの投資スタンス</div>
+        <div class="stance-text">「押し目買い」── 焦って飛び乗らず、市場調整局面で少しずつ拾う</div>
+        <p style="margin-top:12px;font-size:0.9rem;">いきなりフルポジションを取るのではなく、日経平均が大きく下落したタイミングで少しずつ拾っていく。まずは打診買いから入って、下がったら追加する。中期的な目安は「二万円の大台突破」。</p>
+      </div>
+
+      <div class="risk-box" style="margin-top:28px;">
+        <h3>⚠ 注意したいリスク</h3>
+        <div class="risk-item">
+          <span class="risk-num">1</span>
+          <span><strong>株価の過熱感</strong>──急騰後の銘柄はボラティリティが高く、利益確定売りによる短期調整の可能性。</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-num">2</span>
+          <span><strong>マクロリスク</strong>──中東情勢の緊張が続けば原油高になり、石油化学系の事業コストが上昇。</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-num">3</span>
+          <span><strong>半導体サイクル</strong>──AIの設備投資が一服したり、汎用半導体が回復しなかったりすると株価が逆回転するリスク。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Chapter 6 / Summary ─── -->
+  <section id="chapter-6">
+    <h2>まとめ ── 今後の投資スタンスと戦略</h2>
+    <div class="card">
+      <p>レゾナックは、「古くて地味な化学メーカー」というイメージを完全に脱ぎ捨てつつある会社です。</p>
+      <ul class="summary-list">
+        <li>AI半導体の後工程材料で<strong>世界トップクラスのシェア</strong>を持つ</li>
+        <li>直近Q1決算でコア営業利益が<strong>前年比2.3倍</strong>、上期業績予想も<strong>90%増の大幅上方修正</strong></li>
+        <li>AIブームの恩恵を製造工程の核心部分で<strong>直接受けている構造</strong></li>
+        <li>構造改革による「二段ロケット」的な利益拡大が現実のものに</li>
+      </ul>
+      <p style="margin-top:20px;">一方で株価はすでに急騰しており、短期的な調整リスクは意識しておく必要があります。戦略としては「焦って飛び乗らず、押し目を狙う」。まず小さく入って、調整局面で拾い増しするのがベストだと思います。</p>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <div class="cta">
+    <p>レゾナックはポートフォリオに入れるべきか、まだ様子見か。</p>
+    <p class="sub">コメントで教えてください。「この銘柄も分析してほしい」というリクエストもお待ちしています！</p>
+  </div>
+
+  <!-- ─── Footer ─── -->
+  <footer>
+    <p class="disclaimer">※ 本記事は情報提供を目的としたものであり、特定の有価証券の売買を推奨するものではありません。投資の最終判断はご自身の責任でお願いします。</p>
+    <p class="copyright">© かぶまる</p>
+  </footer>
+
+</div><!-- /container -->
+</body>
+</html>

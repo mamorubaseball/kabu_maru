@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【AIセキュリティ】グローバルセキュリティエキスパート(4417)銘柄分析：時価総額500億円の壁とアップサイド+89.5%の真実</title>
+    <meta name="description" content="グローバルセキュリティエキスパート(4417)の投資判断レポート。生成AI時代のセキュリティ需要、教育と脆弱性診断の一体型ビジネスモデル、機関投資家の参入トリガーとなる時価総額500億円の壁について徹底分析。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #040810;
+            --bg-secondary: #0b1120;
+            --bg-card: rgba(15, 23, 42, 0.55);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --color-accent: #00f2fe; /* Cyber Cyan */
+            --color-accent-rgb: 0, 242, 254;
+            --color-secondary: #a18cd1; /* Purple */
+            --color-success: #10b981; /* Emerald */
+            --color-warning: #fbbf24; /* Amber */
+            --color-danger: #f43f5e; /* Rose */
+            --gradient-primary: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #a18cd1 100%);
+            --font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+            --font-display: 'Outfit', 'Noto Sans JP', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(4, 8, 16, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 999;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 22px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            font-size: 13px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--color-accent);
+            -webkit-text-fill-color: var(--color-accent);
+            font-family: var(--font-sans);
+            font-weight: 600;
+        }
+
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 110px auto 40px;
+            padding: 0 40px;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            position: sticky;
+            top: 110px;
+            height: calc(100vh - 150px);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .sidebar h3 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-list li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-list li a:hover,
+        .toc-list li.active a {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+            border-left-color: var(--color-accent);
+            padding-left: 18px;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 940px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            padding: 48px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(11, 17, 32, 0.9) 0%, rgba(4, 8, 16, 0.95) 100%);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            align-self: flex-start;
+            padding: 6px 14px;
+            border-radius: 99px;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--color-accent);
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.35;
+            letter-spacing: -0.5px;
+            z-index: 1;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            z-index: 1;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Glassmorphism Section Card */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 242, 254, 0.15);
+        }
+
+        .content-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-num {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .section-content p {
+            font-size: 15.5px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Grid Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .metric-value.highlight {
+            color: var(--color-accent);
+        }
+
+        .metric-value.success {
+            color: var(--color-success);
+        }
+
+        /* Quote box styling */
+        .quote-box {
+            background: rgba(0, 242, 254, 0.03);
+            border-left: 4px solid var(--color-accent);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+
+        .quote-box p {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 16.5px;
+            margin-bottom: 0;
+        }
+
+        /* Subsections for Strengths and Risks */
+        .subsection-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .strength-title {
+            color: var(--color-success);
+            border-bottom-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .risk-title {
+            color: var(--color-warning);
+            border-bottom-color: rgba(251, 191, 36, 0.15);
+        }
+
+        /* Point Grid / Items */
+        .points-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .point-item {
+            display: flex;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .point-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .point-badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 26px;
+            padding: 0 12px;
+            background: rgba(0, 242, 254, 0.08);
+            color: var(--color-accent);
+            border-radius: 99px;
+            font-size: 11.5px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 242, 254, 0.18);
+        }
+
+        .point-item p {
+            margin-bottom: 0;
+            font-size: 14.5px;
+            color: var(--text-secondary);
+        }
+
+        /* Table design */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14.5px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Disclaimer Styling */
+        .disclaimer-box {
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(244, 63, 94, 0.04);
+            border: 1px solid rgba(244, 63, 94, 0.15);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+                padding: 0 24px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+            header {
+                padding: 0 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                margin-top: 80px;
+                padding: 0 16px;
+                gap: 20px;
+            }
+            .sidebar {
+                display: none; /* スマホではサイドバーを非表示にして読みやすさ優先 */
+            }
+            .hero-banner {
+                padding: 24px 20px;
+            }
+            .hero-title {
+                font-size: 22px;
+                line-height: 1.4;
+            }
+            .glass-card {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+            .section-content p {
+                font-size: 15.5px;
+                line-height: 1.85;
+                margin-bottom: 20px;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .metric-card {
+                padding: 14px;
+            }
+            .metric-value {
+                font-size: 18px;
+            }
+            table {
+                font-size: 13px;
+            }
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div id="progress" class="progress-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            KABUMARU <span>4417</span>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>目次 (Contents)</h3>
+                <ul class="toc-list" id="toc">
+                    <li><a href="#section-0">エグゼクティブサマリー</a></li>
+                    <li><a href="#section-1">ビジネスモデルとサービス分析</a></li>
+                    <li><a href="#section-2">AI時代における必要性（強みの源泉）</a></li>
+                    <li><a href="#section-3">業績動向・財務分析</a></li>
+                    <li><a href="#section-4">投資論点（500億円の壁とアップサイド）</a></li>
+                    <li><a href="#section-5">強みと注意点（リスクの整理）</a></li>
+                    <li><a href="#section-6">結論・投資スタンス</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Hero Header -->
+            <div class="hero-banner">
+                <span class="hero-badge">銘柄徹底分析レポート</span>
+                <h1 class="hero-title">グローバルセキュリティエキスパート (4417)<br>生成AIセキュリティ大本命と機関投資家参入の臨界点</h1>
+                <div class="hero-meta">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        執筆者: かぶまる
+                    </span>
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        基準日: 2026年6月9日
+                    </span>
+                </div>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">現在株価 (2026/6/5終値)</div>
+                    <div class="metric-value">3,060円</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">目標株価 (東海東京レポート)</div>
+                    <div class="metric-value highlight">5,800円</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">想定アップサイド</div>
+                    <div class="metric-value success">+89.5%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">現在の時価総額</div>
+                    <div class="metric-value">約475億円</div>
+                </div>
+            </div>
+
+            <!-- Section 0: Executive Summary -->
+            <section id="section-0" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 01</span>
+                    エグゼクティブサマリー
+                </h2>
+                <div class="section-content">
+                    <p>グローバルセキュリティエキスパート（GSX / 4417）は、深刻なサイバーセキュリティ人材不足という社会課題を背景に、「セキュリティ教育」と「脆弱性診断・実務運用支援」のハイブリッドモデルで爆発的な成長を続ける企業です。</p>
+                    <div class="quote-box">
+                        <p>「セキュリティ銘柄は多々あるが、本当にAI時代の波に乗れる本命はどこか？」</p>
+                    </div>
+                    <p>結論から述べると、GSXは生成AI特有のセキュリティ脅威である「プロンプトインジェクション」などに対応する診断サービスをいち早く市場に投入し、AIセキュリティ分野における事実上のファーストムーバーアドバンテージを確立しつつあります。</p>
+                    <p>さらに、時価総額約475億円という現在の立ち位置は、中小型株ファンドや海外機関投資家が参入基準とする「500億円の壁」の手前であり、この壁を突破した際に一気に流動性が高まり株価が急上昇する蓋然性が極めて高いと評価できます。東海東京証券が2026年6月5日付で目標株価を5,800円（アップサイド+89.5%）へ大幅引き上げしたことは、この見立てを強く裏付けるものです。</p>
+                </div>
+            </section>
+
+            <!-- Section 1: Business Model -->
+            <section id="section-1" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 02</span>
+                    ビジネスモデルとサービス分析
+                </h2>
+                <div class="section-content">
+                    <p>GSXのビジネスモデルの最大の特徴は、単なるセキュリティシステムの導入代行や製品販売ではなく、「日本初のサイバーセキュリティ教育カンパニー」としての強固な地位と、高度な「診断・コンサルティング」実務を一貫提供している点にあります。</p>
+                    <p>主なターゲット顧客は、大企業のような専任のセキュリティ担当部署を持たない「日本の中堅・中小企業」および「IT企業・SIer」です。この層はセキュリティに対する危機感は強いものの、知識と人手が圧倒的に不足しているため、GSXの「教育＋伴走型実務代行」モデルが極めて強力に刺さっています。</p>
+                    
+                    <div class="points-container">
+                        <div class="point-item">
+                            <span class="point-badge">教育・研修</span>
+                            <p>CISSPやEC-Councilなどのセキュリティ専門資格の取得講座や、一般従業員向けの標的型メール訓練サービスを提供。顧客企業内にセキュリティリテラシーのある人材を育成することで、中長期的なエンゲージメントを構築しています。</p>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-badge">診断・コンサル</span>
+                            <p>Webアプリケーション、プラットフォーム、ネットワークなどの脆弱性を精緻に診断。近年はクラウド環境や後述の生成AIに特化した診断の需要が急増しています。</p>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-badge">ソリューション・MDR</span>
+                            <p>CrowdStrike Falcon等の最先端EDR製品を顧客に導入し、24時間365日体制で監視・分析を行う「MDR（Managed Detection and Response）」を提供。自社に運用体制を持たない中堅企業向けのアウトソーシング需要を回収しています。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: AI Security -->
+            <section id="section-2" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 03</span>
+                    AI時代における必要性（強みの源泉）
+                </h2>
+                <div class="section-content">
+                    <p>「今のAI時代において、GSXは本当に必要なのか？」という問いに対し、同社は明確な戦略と実績で回答を示しています。生成AIの爆発的普及は、同社のビジネスチャンスを爆発的に広げています。</p>
+                    <p>生成AI（LLM）の企業導入が進む中、以下のような「AI特有のセキュリティ脅威」が深刻化しています。</p>
+                    <ul>
+                        <li style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 8px;"><strong>プロンプトインジェクション:</strong> AIシステムに対して悪意のある指示を入力し、AIに本来のルールを逸脱した行動をとらせる攻撃。</li>
+                        <li style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 8px;"><strong>プロンプトリーク:</strong> AIのシステムプロンプトや内部の機密データ、個人情報を不正に出力させる攻撃。</li>
+                    </ul>
+                    <p>これらの脅威は、従来のWeb脆弱性診断ツールでは検出できません。そこでGSXは2026年5月27日、**「AIプロンプト診断（AI Prompt Security）」**の提供を電撃開始しました。これは国際的標準である「OWASP LLM Top 10」に準拠し、本番運用の生成AIアプリを網羅的にテストするサービスです。AIの実装・導入を急ぐ企業にとって、この診断はリリース前の必須ゲートウェイとなりつつあります。</p>
+                    <p>また、同月（2026年5月）には、AIセキュリティの先端技術を持つスタートアップ企業**「CoWorker社」との戦略的業務提携**を発表しました。これにより、診断プロセスのAIによる自動化を推進し、深刻なセキュリティエンジニア不足をAI技術で解決しつつ、超高収益な診断ビジネスのスケールアップを可能にしています。</p>
+                </div>
+            </section>
+
+            <!-- Section 3: Performance -->
+            <section id="section-3" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 04</span>
+                    業績動向・財務分析
+                </h2>
+                <div class="section-content">
+                    <p>業績は驚異的なスピードで拡大しており、日本の上場テック企業の中でもトップクラスの財務パフォーマンスを見せています。</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>決算期</th>
+                                <th>売上高</th>
+                                <th>経常利益</th>
+                                <th>増益率（経常）</th>
+                                <th>進捗状況</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025年3月期</td>
+                                <td>実績（高成長）</td>
+                                <td>実績（過去最高）</td>
+                                <td>-</td>
+                                <td>達成</td>
+                            </tr>
+                            <tr>
+                                <td>2026年3月期</td>
+                                <td>-</td>
+                                <td>22.2億円</td>
+                                <td>+42.3%</td>
+                                <td>確定（最高益）</td>
+                            </tr>
+                            <tr>
+                                <td>2027年3月期（予想）</td>
+                                <td>-</td>
+                                <td>29.7億円</td>
+                                <td>+33.8%</td>
+                                <td>9期連続最高益へ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>売上高が毎年+25%前後で推移する中、利益率はそれ以上のペースで拡大しています。主な要因は、ライセンス販売などの低利益率なビジネスから、教育・脆弱性診断といった「内製化された高付加価値な自社サービス」の比率が高まったためです。</p>
+                    <p>財務面においても、無借金かつ高い自己資本比率を維持しており、キャッシュフローの創出力が高いため、新規サービス開発やCoWorker社のようなスタートアップへの戦略出資を自己資金で機動的に実行できる点も大きな強みです。</p>
+                </div>
+            </section>
+
+            <!-- Section 4: Investment Catalyst -->
+            <section id="section-4" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 05</span>
+                    投資論点（500億円の壁とアップサイド）
+                </h2>
+                <div class="section-content">
+                    <p>本銘柄における最もエキサイティングな投資論点は、株価の上昇が単なる「将来の業績期待」だけでなく、**「受給構造の大きな変化（地殻変動）」**を伴って起きる可能性が高いという点です。</p>
+                    <p>現在、GSXの時価総額は約475億円（株価3,060円時点）となっています。日本の株式市場において、「時価総額500億円」という数字は非常に大きな意味を持ちます。</p>
+                    
+                    <div class="points-container">
+                        <div class="point-item">
+                            <span class="point-badge">機関投資家の投資対象ライン</span>
+                            <p>多くの国内・海外の機関投資家（年金、アクティブファンド等）は、運用規模と流動性の観点から、投資対象とするユニバース（銘柄リスト）の最低基準として「時価総額500億円以上」というフィルターをかけています。現在の475億円という規模では、多くのファンドが「買いたくてもルール上買えない」状態にあります。</p>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-badge">臨界点突破による需給インパクト</span>
+                            <p>株価がもう一段上昇し、時価総額が500億円を安定的に超えると、これらの機関投資家のスクリーニングに一斉にヒットするようになります。これまで参入できなかった大口資金の買いが一気に流入するため、流動性が劇的に向上し、株価のマルチプル（PER）評価自体が切り上がることが期待されます。</p>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-badge">目標株価5,800円の妥当性</span>
+                            <p>東海東京証券が6/8付レポート（6/5引け後発表）にて目標株価を5,800円（アップサイド+89.5%）に設定したのは、まさにこの「AIセキュリティをドライバーとした連続最高益の成長」と「需給変化によるプレミアム化」を織り込んだ結果と推察され、極めて合理的なターゲットであると考えます。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Risks -->
+            <section id="section-5" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 06</span>
+                    強みと注意点（リスクの整理）
+                </h2>
+                <div class="section-content">
+                    <p>高い成長ポテンシャルを持つGSXですが、投資にあたっては以下の点に留意する必要があります。</p>
+                    
+                    <h3 class="subsection-title strength-title">主な強み (Strengths)</h3>
+                    <ul>
+                        <li style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 8px;"><strong>教育をフックとしたワンストップモデル:</strong> 人材教育を通じて企業の懐に入り込み、脆弱性診断、ソリューション導入、MDR監視までを芋づる式に獲得できる体制。</li>
+                        <li style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 8px;"><strong>AI対応力とスピード感:</strong> 生成AI特有の脆弱性診断をいち早くサービス化し、先行者利益を獲得。</li>
+                        <li style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 8px;"><strong>盤石なファンダメンタルズ:</strong> 連続最高益更新、高ROE、無借金の優良な財務状況。</li>
+                    </ul>
+
+                    <h3 class="subsection-title risk-title">注意点・リスク (Risks)</h3>
+                    <div class="points-container">
+                        <div class="point-item">
+                            <span class="point-badge">自社人材の採用コスト</span>
+                            <p>顧客企業の「セキュリティ人材不足」が同社の稼ぎ時である一方、同社自身も案件増加に対応するため高度な技術者を獲得し続けなければなりません。採用競争の激化による人件費高騰が利益率を一時的に圧迫するリスクがあります（CoWorker社との提携によるAI診断の自動化がこのリスクを緩和できるかがポイント）。</p>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-badge">レピュテーションリスク</span>
+                            <p>セキュリティ専門企業というビジネスの性質上、GSX自身や主要な顧客システムにおいて大規模なセキュリティ事故（情報漏洩など）が発生した場合、ブランド価値と業績へのダメージが甚大になります。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: Conclusion -->
+            <section id="section-6" class="content-section glass-card">
+                <h2 class="section-title">
+                    <span class="section-num">Chapter 07</span>
+                    結論・投資スタンス
+                </h2>
+                <div class="section-content">
+                    <p>総括として、グローバルセキュリティエキスパート（4417）は、単なるトレンドに乗った「テーマ株」ではなく、<strong>強力なファンダメンタルズと明確なAI成長戦略、そして需給の変化を控えた「高確率な中小型成長株」</strong>であると結論づけます。</p>
+                    <p>投資スタンスとしては、時価総額500億円の壁の手前である現在の「3,000円台前半」は極めて魅力的な仕込み時と考えられます。東海東京証券の目標株価5,800円に向けて、アップサイドは+80%以上存在し、中長期的なAIセキュリティ需要の拡大を考えれば、押し目を丹念に拾っていく戦略が極めて有効です。</p>
+                    <p>日本のセキュリティ業界の中でも教育とAI実装の両輪を持つ独自のポジショニングは、今後さらに高い評価を受けることになるでしょう。</p>
+                </div>
+            </section>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer-box">
+                <strong>【免責事項】</strong> 本レポートは、投資判断の参考となる情報の提供を目的としたものであり、特定の有価証券の売買等の勧誘・推奨を目的としたものではありません。投資に関する最終決定は、お客様ご自身の判断と責任において行っていただけますようお願いいたします。
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 KABUMARU. All rights reserved.
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+
+        // IntersectionObserver for active section highlighting
+        const observerOptions = {
+            root: null,
+            threshold: 0.15,
+            rootMargin: '0px 0px -40% 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.toc-list li').forEach(li => {
+                        li.classList.remove('active');
+                        const link = li.querySelector('a');
+                        if (link && link.getAttribute('href') === '#' + id) {
+                            li.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-section').forEach(section => {
+            observer.observe(section);
+            // Initially check visibility
+            if (section.getBoundingClientRect().top < window.innerHeight) {
+                section.classList.add('visible');
+            }
+        });
+    </script>
+</body>
+</html>

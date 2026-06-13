@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キオクシアホールディングス（285A）投資判断レポート</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1f2937;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --buy: #3fb950;
+    --sell: #f85149;
+    --hold: #d29922;
+    --table-header: #1c2433;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'Meiryo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(135deg, #0d1117 0%, #1c2433 50%, #0d1117 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, rgba(88,166,255,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(88,166,255,0.15);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .cover h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .cover .ticker {
+    font-size: 16px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .cover .date {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+  }
+
+  /* Verdict pill */
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(63,185,80,0.12);
+    border: 2px solid var(--buy);
+    border-radius: 50px;
+    padding: 12px 30px;
+    margin-bottom: 20px;
+  }
+  .verdict-label { font-size: 12px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; }
+  .verdict-text { font-size: 22px; font-weight: 700; color: var(--buy); }
+  .verdict-price { font-size: 14px; color: var(--text-muted); }
+  .verdict-price strong { color: var(--text); font-size: 16px; }
+
+  /* ── Layout ── */
+  .container { max-width: 1080px; margin: 0 auto; padding: 40px 24px; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+    margin-bottom: 20px;
+    letter-spacing: 0.3px;
+  }
+  .section-title .num { color: var(--text-muted); font-size: 13px; font-weight: 400; margin-right: 6px; }
+
+  /* ── KPI Cards ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .kpi-card.green::before { background: var(--buy); }
+  .kpi-card.red::before { background: var(--sell); }
+  .kpi-card.purple::before { background: var(--accent4); }
+  .kpi-card.orange::before { background: #f0883e; }
+  .kpi-label { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .kpi-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .kpi-value.buy { color: var(--buy); }
+  .kpi-value.red { color: var(--sell); }
+  .kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── Tables ── */
+  .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin: 16px 0; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    background: var(--table-header);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .num-cell { text-align: right; font-variant-numeric: tabular-nums; }
+  .tag-buy { display: inline-block; background: rgba(63,185,80,0.15); color: var(--buy); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .tag-hold { display: inline-block; background: rgba(210,153,34,0.15); color: var(--hold); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .tag-risk { display: inline-block; background: rgba(248,81,73,0.15); color: var(--sell); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+  /* ── Prose ── */
+  .prose p { color: var(--text); line-height: 1.8; margin-bottom: 12px; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  /* ── Highlight Box ── */
+  .highlight-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .highlight-box.warning { border-left-color: var(--hold); }
+  .highlight-box.danger { border-left-color: var(--sell); }
+  .highlight-box.info { border-left-color: var(--accent4); }
+  .highlight-box p { margin-bottom: 6px; font-size: 13px; }
+  .highlight-box p:last-child { margin-bottom: 0; }
+  .highlight-box strong { color: var(--text); }
+
+  /* ── Scenario Cards ── */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0; }
+  .scenario-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .scenario-card.bull { border-top: 2px solid var(--buy); }
+  .scenario-card.base { border-top: 2px solid var(--accent); }
+  .scenario-card.bear { border-top: 2px solid var(--sell); }
+  .scenario-title { font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+  .scenario-card.bull .scenario-title { color: var(--buy); }
+  .scenario-card.base .scenario-title { color: var(--accent); }
+  .scenario-card.bear .scenario-title { color: var(--sell); }
+  .scenario-price { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .scenario-prob { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+  .scenario-note { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── Catalyst List ── */
+  .catalyst-list { list-style: none; margin: 12px 0; }
+  .catalyst-list li {
+    padding: 10px 14px 10px 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    position: relative;
+  }
+  .catalyst-list li::before {
+    content: '▶';
+    position: absolute;
+    left: 12px;
+    color: var(--accent);
+    font-size: 10px;
+    top: 12px;
+  }
+  .catalyst-list.risk li::before { color: var(--sell); content: '⚠'; }
+
+  /* ── Timeline Bar ── */
+  .progress-bar { background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; margin: 4px 0; }
+  .progress-fill { height: 100%; border-radius: 4px; }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 60px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 600px) {
+    .cover h1 { font-size: 22px; }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ COVER ══════════ -->
+<div class="cover">
+  <div class="cover-badge">Investment Analysis Report</div>
+  <h1>キオクシアホールディングス</h1>
+  <div class="ticker">東証プライム　285A　／　半導体・NAND型フラッシュメモリ</div>
+  <div class="date">作成日：2026年6月13日　｜　基準株価：¥81,200（2026/6/12終値）</div>
+  <div class="verdict">
+    <span class="verdict-label">投資判断</span>
+    <span class="verdict-text">BUY（強気）</span>
+    <span class="verdict-price">アナリスト平均目標株価 <strong>¥89,188</strong></span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════ 1. EXECUTIVE SUMMARY ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">1.</span>エグゼクティブ・サマリー</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">投資判断</div>
+      <div class="kpi-value buy">BUY</div>
+      <div class="kpi-sub">アナリスト16名中強気買い9名</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">現在株価</div>
+      <div class="kpi-value">¥81,200</div>
+      <div class="kpi-sub">2026/6/12 +7.64%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">平均目標株価</div>
+      <div class="kpi-value">¥89,188</div>
+      <div class="kpi-sub">上昇余地 +9.8%</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">FY2026 売上収益</div>
+      <div class="kpi-value">2兆3,376億円</div>
+      <div class="kpi-sub">前期比 +37.0%</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">FY2026 営業利益</div>
+      <div class="kpi-value">8,704億円</div>
+      <div class="kpi-sub">前期比 +92.7%（8年ぶり最高）</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">FY2027 Q1 純利益予想</div>
+      <div class="kpi-value">8,690億円</div>
+      <div class="kpi-sub">前年同期比 約48倍</div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <p><strong>投資のハイライト（強み・機会）</strong></p>
+    <p>① 生成AI特需によるAIデータセンター向けエンタープライズSSD需要が爆発的に拡大し、2026年の生産枠はほぼ「完売（Sold Out）」状態。一部ハイパースケーラーとは2027〜2028年視野の長期前払い契約交渉が進行中。</p>
+    <p>② 第8世代BiCS FLASH（218層）の本格量産拡大に加え、第10世代（332層）の2026年度投入を公式化。世界最高水準の記録密度29Gb/mm²と転送速度4.8Gbpsを実現。</p>
+    <p>③ NVIDIAと共同開発中の「Super High IOPS SSD（GPシリーズ）」が2026年後半にサンプル出荷予定。既存SSD比約8倍のIOPS性能が次のゲームチェンジャーとなりうる。</p>
+    <p>④ 財務体質の急改善：自己資本比率25%→38%、FCF過去最高の3,950億円、ネットD/Eレシオ126%→39%。米国ADSの上場準備も進行中で、資本調達の多様化が進む。</p>
+    <p>⑤ Western Digital（SanDisk）との合弁契約を2034年まで延長。製造コスト共有と安定した生産能力を維持。</p>
+  </div>
+
+  <div class="highlight-box warning">
+    <p><strong>主要リスク要因</strong></p>
+    <p>① シリコンサイクルリスク：競合各社（Samsung・SKハイニックス等）の増産投資加速で、需給バランス崩壊時にNAND価格が急落するリスク。2023〜2024年は2期連続赤字の実績あり。</p>
+    <p>② 通期業績予想の非開示：地政学リスク（中東情勢等）を理由にFY2027通期予想を開示せず。期待値の高さが下振れ時の失望売りリスクを高めている。</p>
+    <p>③ 為替リスク：輸出比率が高く、円高進行時には業績に直撃。1円の円高でQ単位で売上▲100億円・営業利益▲90億円の感応度。</p>
+    <p>④ 地政学・輸出規制：米中摩擦の激化による供給網分断・輸出規制強化リスク。</p>
+    <p>⑤ バリュエーション過熱：PBR約31倍は過去水準と比較して割高感があり、高い期待値に見合った業績継続が必須。</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>指標</th>
+          <th class="num-cell">FY2024実績</th>
+          <th class="num-cell">FY2025実績</th>
+          <th class="num-cell">FY2026実績</th>
+          <th class="num-cell">FY2027 Q1予想</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>売上収益（億円）</td><td class="num-cell">9,831</td><td class="num-cell">17,056</td><td class="num-cell">23,376</td><td class="num-cell">17,500（四半期）</td></tr>
+        <tr><td>Non-GAAP営業利益（億円）</td><td class="num-cell">▲2,912</td><td class="num-cell">4,541</td><td class="num-cell">8,762</td><td class="num-cell">12,980（四半期）</td></tr>
+        <tr><td>Non-GAAP純利益（億円）</td><td class="num-cell">▲3,111</td><td class="num-cell">2,670</td><td class="num-cell">5,596</td><td class="num-cell">8,690（四半期）</td></tr>
+        <tr><td>EBITDA（億円）</td><td class="num-cell">—</td><td class="num-cell">7,607</td><td class="num-cell">11,879</td><td class="num-cell">—</td></tr>
+        <tr><td>FCF（億円）</td><td class="num-cell">▲</td><td class="num-cell">—</td><td class="num-cell">3,950（過去最高）</td><td class="num-cell">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 2. 企業概要 ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">2.</span>企業概要</div>
+
+  <div class="prose">
+    <p><strong>会社概要・沿革：</strong>キオクシアホールディングス（旧称：東芝メモリホールディングス）は、2017年に東芝の半導体メモリ事業を分社化して設立。2024年12月、東証プライム市場に上場（ティッカー：285A）。NANDフラッシュメモリの発明企業として半導体業界に深い歴史を持つ。主要株主は文化省・産業省系の官民ファンドや海外PE（ベインキャピタル等）。</p>
+    <p><strong>事業内容：</strong>主力事業はNAND型フラッシュメモリの設計・製造・販売。スマートフォン・PC・データセンター向けSSD（ソリッドステートドライブ）、USBメモリ・SDカード等のリテール製品、および企業向けエンタープライズSSDを展開。FY2026実績ではデータセンター・エンタープライズ向けが売上全体の約60%を占める。</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>用途別セグメント（FY2026）</th><th class="num-cell">売上比率</th><th>前年比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>データセンター・エンタープライズSSD</td><td class="num-cell">約60%</td><td>前年比 約40%増（1兆3,626億円）</td></tr>
+        <tr><td>スマートフォン向け</td><td class="num-cell">約21%</td><td>好調継続</td></tr>
+        <tr><td>PC・クライアント向け</td><td class="num-cell">約10%</td><td>横ばい</td></tr>
+        <tr><td>その他（リテール・SanDisk向け）</td><td class="num-cell">約9%</td><td>ほぼ横ばい（2,150億円）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box info">
+    <p><strong>主力技術：BiCS FLASH™（Bit Cost Scalable FLASH）</strong></p>
+    <p>キオクシア独自の3次元積層NANDフラッシュ技術。セルをタワー状に垂直積層することで、同じシリコン面積により多くのデータを格納できる。第8世代（218層）を現在量産中。第10世代（332層）が業界最高水準の記録密度29Gb/mm²・転送速度4.8Gbpsを達成し、2026年度中に量産投入予定。</p>
+  </div>
+
+  <div class="prose">
+    <p><strong>生産体制：</strong>四日市工場（三重県）が主力生産拠点。北上工場（岩手県）が新工場として本格稼働中。Western Digital（SanDisk）との合弁体制（四日市工場）を2034年まで延長・維持。製造コストを折半することでコスト競争力を確保。2026〜2029年にかけて製造サービス料等として総額約1,800億円を受領予定。</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 3. 業界・市場環境 ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">3.</span>業界動向・市場環境分析</div>
+
+  <div class="prose">
+    <p><strong>NANDフラッシュメモリ市場の現状：</strong>生成AIの急速普及により、AIデータセンターでのストレージ需要が空前の規模で拡大している。従来のHDD（ハードディスク）ではAI推論の速度要件を満たせず、高速なNAND型SSDへの置き換えが加速。市場調査会社TrendForceによれば、2026年Q2のNAND価格は前期比70〜75%の上昇が見込まれるなど、需給は極めて引き締まった状態にある。</p>
+    <p><strong>中長期成長見通し：</strong>NAND市場は2026年度も10%台後半の成長、2027年度も需要が供給を上回る見通し。生成AIサーバー1台あたりに搭載されるSSD容量は従来サーバーの数倍規模に達しており、この構造的変化が「AIストレージ・スーパーサイクル」を生み出している。</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>競合会社</th>
+          <th class="num-cell">NAND世界シェア（TrendForce 2025Q4）</th>
+          <th>主な特徴・戦略</th>
+          <th>対キオクシア比較</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Samsung Electronics（韓国）</td>
+          <td class="num-cell">28.0%</td>
+          <td>NAND世界首位。HBMにリソース集中の傾向あり。次世代NAND量産時期を調整中。</td>
+          <td>大きなシェア差あるが、HBM注力でNAND投資を抑制中</td>
+        </tr>
+        <tr>
+          <td>SK Hynix（韓国）</td>
+          <td class="num-cell">22.1%</td>
+          <td>NAND世界2位。HBM首位。NANDよりHBMに開発リソースを重点配分。</td>
+          <td>HBM競争でNANDへの集中度が低下、キオクシアに追い風</td>
+        </tr>
+        <tr>
+          <td>Micron Technology（米国）</td>
+          <td class="num-cell">約13%</td>
+          <td>DRAMとNANDを両立。米国製造・補助金活用。NANDはWD分離後に規模縮小。</td>
+          <td>規模面で劣後。補助金優位</td>
+        </tr>
+        <tr>
+          <td>Western Digital（SanDisk）</td>
+          <td class="num-cell">約14%</td>
+          <td>キオクシアの合弁パートナー。独立してSanDiskとして事業展開。</td>
+          <td>合弁維持。競合でもあり協業関係でもある複雑な構造</td>
+        </tr>
+        <tr>
+          <td><strong>キオクシア（285A）</strong></td>
+          <td class="num-cell"><strong>14.1%（3位）</strong></td>
+          <td>NAND専業。AIデータセンター向け大容量・高性能SSDに集中特化。</td>
+          <td>競合がHBMに注力する中、NANDへの集中がAI需要を直接取り込む強みに</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box info">
+    <p><strong>キオクシアの差別化ポイント：「NANDオンリー」戦略の威力</strong></p>
+    <p>SamsungやSK HynixがHBM（高帯域幅メモリ）へのリソースシフトを急ぐ中、キオクシアはNAND型フラッシュに経営資源を集中。AI推論サーバーに必須の大容量・高速SSDでの供給余力がライバルを上回り、価格上昇メリットをダイレクトに享受できる構造になっている。</p>
+  </div>
+
+  <div class="prose">
+    <p><strong>地政学・マクロ環境：</strong>米中半導体摩擦の激化は短期リスクだが、日本拠点生産のキオクシアには「脱中国」を図る西側企業からの調達需要という追い風もある。日本政府のChipletや半導体産業支援政策（経済安保推進法等）も間接的な追い風。一方で、米国輸出規制の範囲拡大が特定顧客への販売制限リスクをはらんでいる点には注意が必要。</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 4. 財務分析 ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">4.</span>財務分析と業績推移</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">売上収益（FY2026）</div>
+      <div class="kpi-value">2兆3,376億</div>
+      <div class="kpi-sub">前期比 +37.0%（過去最高）</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Non-GAAP営業利益率</div>
+      <div class="kpi-value">37.5%</div>
+      <div class="kpi-sub">前期の約20%から急拡大</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">EBITDA（FY2026）</div>
+      <div class="kpi-value">1兆1,879億</div>
+      <div class="kpi-sub">前期比 +56%</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">FCF（FY2026）</div>
+      <div class="kpi-value">3,950億</div>
+      <div class="kpi-sub">過去最高。財務改善の証拠</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">自己資本比率</div>
+      <div class="kpi-value">37.9%</div>
+      <div class="kpi-sub">前期25%→大幅改善</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ネットD/Eレシオ</div>
+      <div class="kpi-value">39%</div>
+      <div class="kpi-sub">前期126%→財務体質が劇的に改善</div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p><strong>業績急回復の背景：</strong>2023〜2024年（FY2024）に2期連続赤字という厳しい状況から、FY2025・FY2026と2期連続の増収増益を達成。特にFY2026 Q4（2026年1〜3月）単体での売上は1兆29億円・営業利益5,991億円と、わずか3ヶ月で前年度の年間営業利益を超える爆発的な拡大を記録した。</p>
+    <p><strong>設備投資（CAPEX）と研究開発費：</strong>第8世代BiCS FLASHの量産拡大と第10世代への移行に向けて、年間数千億円規模の設備投資を継続。利益拡大によりFCFを確保しながら次世代技術への投資を行える好循環が生まれている。北上（岩手）工場への投資も順次拡大中。</p>
+    <p><strong>為替感応度（重要リスク）：</strong>キオクシアは輸出比率が高く、円高リスクに敏感。経営陣開示によれば、1円の円高で四半期ベースで売上▲100億円・営業利益▲90億円程度の影響がある。FY2027 Q1ガイダンスの前提為替レートはドル円159円。</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 5. 事業戦略 ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">5.</span>事業戦略と将来展望</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>戦略テーマ</th><th>内容</th><th>時期</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>第8世代BiCS FLASH拡大</strong></td>
+          <td>218層の高性能・大容量SSD向け生産ラインを北上・四日市で拡張。AIデータセンター向けSSD出荷を本格化。</td>
+          <td>2026年前半〜継続</td>
+        </tr>
+        <tr>
+          <td><strong>第10世代BiCS FLASH量産</strong></td>
+          <td>332層・記録密度29Gb/mm²・転送速度4.8Gbpsを実現。単位面積あたりの容量が前世代比59%増。エンタープライズSSD向け主力製品へ。</td>
+          <td>2026年度中に量産投入</td>
+        </tr>
+        <tr>
+          <td><strong>Super High IOPS SSD（GPシリーズ）</strong></td>
+          <td>NVIDIAと協力して開発中。XL-FLASH™ベースのストレージクラスメモリ採用。PCIe 6.0で1,000万IOPS、2027年にはPCIe 7.0で1億IOPSを目標。NVIDIA GTC 2026にも展示。</td>
+          <td>2026年後半サンプル出荷、2027年量産</td>
+        </tr>
+        <tr>
+          <td><strong>米国ADS（米国預託証券）上場準備</strong></td>
+          <td>米国市場での上場を通じて投資家層を拡大・資本調達の多様化。次世代技術投資の資金基盤を強化。</td>
+          <td>準備中</td>
+        </tr>
+        <tr>
+          <td><strong>WD（SanDisk）合弁延長</strong></td>
+          <td>四日市工場の合弁契約を2034年まで延長。2026〜2029年に製造サービス料等として約1,800億円受領予定。</td>
+          <td>2034年まで継続</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box">
+    <p><strong>NVIDIA連携の戦略的意義</strong></p>
+    <p>NVIDIAがリードするAIインフラの「Storage Next」アーキテクチャにキオクシアの超高性能SSDが採用されることで、AIサーバーのストレージ標準に組み込まれる可能性がある。HBM（高帯域幅メモリ）がSK HynixとSamsungの牙城であるのに対し、AI推論ストレージ（SSD）という領域でキオクシアが主役の座を狙う構図だ。</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 6. ESG ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">6.</span>ESG分析</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>区分</th><th>主な取り組み</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>環境（E）</strong></td>
+          <td>岩手・北上工場への風力由来電力（コスモHD供給）の活用を発表（2026年6月）。製造工程の省電力化・温室効果ガス削減に向けた設備刷新を継続。BiCS FLASH第10世代は読み出し時消費電力29%削減を達成。</td>
+        </tr>
+        <tr>
+          <td><strong>社会（S）</strong></td>
+          <td>国内工場（四日市・北上）を中心とした雇用創出と地域経済への貢献。技術者育成プログラムの充実。サプライチェーンの国内化による経済安保対応。</td>
+        </tr>
+        <tr>
+          <td><strong>ガバナンス（G）</strong></td>
+          <td>東証プライム上場後のコーポレートガバナンス体制整備を推進。ROE8%水準は機関投資家からプレッシャーを受けており、資本効率向上が課題。米国ADS上場による情報開示水準のさらなる向上が期待される。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 7. バリュエーション ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">7.</span>業績予想とバリュエーション</div>
+
+  <div class="scenario-grid">
+    <div class="scenario-card bull">
+      <div class="scenario-title">🚀 ブルケース（強気）</div>
+      <div class="scenario-price">¥110,000〜120,000</div>
+      <div class="scenario-prob">想定確率：30%</div>
+      <div class="scenario-note">AIデータセンター投資が2027年以降も拡大継続。Super High IOPS SSD（GPシリーズ）がNVIDIA採用で大量受注。EPS 7,000〜8,000円・PER 15〜16倍。市場コンセンサスの通期純利益2兆8,000億円超の期待に応えるシナリオ。</div>
+    </div>
+    <div class="scenario-card base">
+      <div class="scenario-title">📊 ベースケース（基準）</div>
+      <div class="scenario-price">¥85,000〜95,000</div>
+      <div class="scenario-prob">想定確率：50%</div>
+      <div class="scenario-note">AIデータセンター向け需要が2027年も健全に継続。FY2027通期純利益1.5〜2兆円レンジ。アナリストコンセンサス目標株価89,188円近辺。EPS 5,000〜6,000円・PER 15〜18倍での着地。</div>
+    </div>
+    <div class="scenario-card bear">
+      <div class="scenario-title">⚠️ ベアケース（弱気）</div>
+      <div class="scenario-price">¥40,000〜55,000</div>
+      <div class="scenario-prob">想定確率：20%</div>
+      <div class="scenario-note">競合の増産によりNAND価格が急落。シリコンサイクルの悪化で再び赤字転落のリスク。円高進行（¥140台）による業績の大幅な下振れ。2023〜2024年の赤字期と同様の環境に逆戻りするシナリオ。</div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>バリュエーション指標</th>
+          <th class="num-cell">キオクシア現状</th>
+          <th class="num-cell">Samsung</th>
+          <th class="num-cell">Micron</th>
+          <th>コメント</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>PBR</td><td class="num-cell">約31倍</td><td class="num-cell">約2〜4倍</td><td class="num-cell">約3〜5倍</td><td>成長期待で大きくプレミアムが付いている</td></tr>
+        <tr><td>EBITDA倍率</td><td class="num-cell">約3.5〜4倍</td><td class="num-cell">—</td><td class="num-cell">—</td><td>FCF改善と利益拡大でEV/EBITDA基準では割安感も</td></tr>
+        <tr><td>PER（FY2027 Q1年換算）</td><td class="num-cell">約23倍</td><td class="num-cell">—</td><td class="num-cell">—</td><td>Q1年換算EPSから逆算。ベースケース実現で妥当水準</td></tr>
+        <tr><td>時価総額</td><td class="num-cell">約44兆円規模</td><td class="num-cell">約200兆円</td><td class="num-cell">約50〜60兆円</td><td>Micronと同等水準。AI特需を反映した評価</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box warning">
+    <p><strong>バリュエーション上の注意点</strong></p>
+    <p>PBR約31倍はSamsung（2〜4倍）やMicron（3〜5倍）と比べると大幅なプレミアム。この高評価は「AI特需による超高収益の継続」という強気な前提に依存している。FY2027 Q1予想（純利益8,690億円）を4倍した年換算で約3.5兆円の利益期待に対し、時価総額が形成されている状態。少しでも業績が下振れれば急落リスクを内包しており、エントリー時期と分散投資の判断が重要。</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 8. 投資リスク ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">8.</span>投資リスク</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>リスク種別</th><th>内容</th><th>影響度</th><th>対応策・緩和要因</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>シリコンサイクルリスク</strong></td>
+          <td>競合（Samsung等）の増産でNAND価格が急落。2023〜2024年の赤字転落がリピートするリスク。</td>
+          <td><span class="tag-risk">高</span></td>
+          <td>AIデータセンター需要の構造的変化が従来サイクルを緩和。ハイパースケーラーとの長期契約で単価を一部固定。</td>
+        </tr>
+        <tr>
+          <td><strong>業績予想非開示リスク</strong></td>
+          <td>FY2027通期予想非開示により市場の過剰な期待が積み上がり、下振れ時の失望売りが増幅される。</td>
+          <td><span class="tag-risk">高</span></td>
+          <td>Q1ガイダンスは強気（純利益8,690億円）。四半期ごとのアップデートで継続確認が必要。</td>
+        </tr>
+        <tr>
+          <td><strong>為替リスク</strong></td>
+          <td>輸出比率が高く、円高進行で業績に直撃。1円の円高で営業利益▲90億円（四半期）。</td>
+          <td><span class="tag-risk">高</span></td>
+          <td>ヘッジ比率の調整。但し急激な円高は構造的な懸念。</td>
+        </tr>
+        <tr>
+          <td><strong>地政学・輸出規制</strong></td>
+          <td>米中半導体摩擦の激化、輸出規制強化による特定顧客への販売制限。</td>
+          <td><span class="tag-hold">中</span></td>
+          <td>日本製造・日本企業としての立場が一部で優位に働く可能性。ただし規制範囲の拡大は注視。</td>
+        </tr>
+        <tr>
+          <td><strong>バリュエーション過熱リスク</strong></td>
+          <td>PBR約31倍という高評価が維持できない環境になった場合の株価急落。</td>
+          <td><span class="tag-hold">中</span></td>
+          <td>利益成長が高PBRを正当化するかが焦点。FY2027の実績次第で評価が分かれる。</td>
+        </tr>
+        <tr>
+          <td><strong>技術陳腐化・競争激化</strong></td>
+          <td>Samsung/SKハイニックスの積層数競争や新技術（CIM等）での逆転リスク。</td>
+          <td><span class="tag-hold">中</span></td>
+          <td>第10世代（332層）は世界最高水準。NVIDIA連携でAI向けSSD市場でのポジション確立が鍵。</td>
+        </tr>
+        <tr>
+          <td><strong>巨額CAPEX リスク</strong></td>
+          <td>次世代設備投資に年間数千億円を要し、タイミングが悪ければキャッシュフローが悪化。</td>
+          <td><span class="tag-hold">中</span></td>
+          <td>FCFが過去最高の3,950億円に達し、財務体質は大幅改善。米国ADS上場で資金調達も多様化。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ 9. 結論 ══ -->
+<div class="section">
+  <div class="section-title"><span class="num">9.</span>結論・投資判断</div>
+
+  <div class="highlight-box">
+    <p><strong>最終投資判断：BUY（強気）　目標株価：¥89,000〜¥95,000（12ヶ月）</strong></p>
+    <p>キオクシアは「NANDオンリー」専業として、AI時代のデータセンターストレージ需要という最大の恩恵を最も直接的に受けるポジションにある。競合大手がHBM競争に注力する中でNANDへのリソース集中が差別化となり、FY2026の「異次元決算」（売上+37%・営業利益+93%）と、FY2027 Q1の純利益48倍予想という数字がその強さを証明している。</p>
+    <p>財務面でも自己資本比率の改善（25%→38%）、FCF過去最高（3,950億円）、ネットD/Eレシオの劇的な改善（126%→39%）と、基盤が着実に固まっている。アナリスト16名中14名が「買い」推奨であり、平均目標株価89,188円は現在株価より約10%の上昇余地を示唆している。</p>
+  </div>
+
+  <div class="prose">
+    <p><strong>今後注視すべきカタリスト（株価を動かすイベント）：</strong></p>
+  </div>
+
+  <ul class="catalyst-list">
+    <li><strong>FY2027 Q1決算発表（2026年8月予定）：</strong>純利益8,690億円予想が実現するか。Q2以降のガイダンスが示されるかが最大の注目点。初配当実施や自社株買いの検討発表があれば株価急騰のカタリストに。</li>
+    <li><strong>Super High IOPS SSD（GPシリーズ）サンプル出荷（2026年後半）：</strong>NVIDIAとの共同開発製品の実用化がAIストレージ市場でのポジション確立を証明するか。</li>
+    <li><strong>第10世代BiCS FLASH（332層）量産開始：</strong>Samsung・SKハイニックスとの技術格差縮小を示す具体的な製品投入が市場シェア拡大のトリガーに。</li>
+    <li><strong>米国ADS（米国預託証券）上場：</strong>グローバル投資家層の拡大と資本調達力の強化。株価の流動性向上・海外からの再評価につながるイベント。</li>
+    <li><strong>FY2027通期業績予想の開示：</strong>地政学リスクが落ち着いた段階での通期ガイダンス提示は、長期投資家の信頼回復に直結。</li>
+    <li><strong>円ドル為替動向：</strong>円高進行（145円台等）は業績下振れリスクを示す警戒シグナル。逆に円安継続なら業績上振れの追い風。</li>
+  </ul>
+
+  <div class="highlight-box warning">
+    <p><strong>投資スタンスのまとめ</strong></p>
+    <p>「今から買っていいか」という問いへの答え：<strong>業績の方向性（BUY）は明確。ただし一括投資より分散（分割買い）を推奨。</strong>現在株価の水準（81,200円）は既に相当な好材料を織り込んでおり、PBR31倍という評価は高い。FY2027 Q1の決算内容と、通期ガイダンスの開示有無が次の大きな方向性を決める。シリコンサイクルと為替（円高リスク）を念頭に置きつつ、AI時代のストレージインフラ企業として中長期（1〜3年）でのポジション形成を検討する価値は高い。</p>
+  </div>
+</div>
+
+</div><!-- /.container -->
+
+<div class="container">
+<footer>
+<p><strong>免責事項：</strong>本レポートは情報提供を目的としたものであり、投資の勧誘を目的としたものではありません。本レポートの内容に基づいて投資判断を行う場合は、ご自身の責任と判断において行ってください。株式投資はリスクを伴います。最終的な投資判断はご自身でお決めいただきますようお願いいたします。掲載されている情報は2026年6月13日時点のものであり、その後変更になる場合があります。</p>
+</footer>
+</div>
+
+</body>
+</html>

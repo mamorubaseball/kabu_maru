@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キオクシア（285A）投資判断レポート</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --accent: #4fc3f7;
+    --accent2: #e040fb;
+    --green: #66bb6a;
+    --red: #ef5350;
+    --yellow: #ffd54f;
+    --text: #e8eaf0;
+    --text2: #8892a4;
+    --serif: 'Noto Serif JP', serif;
+    --sans: 'Noto Sans JP', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.8;
+    font-size: 14px;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #0d1220 0%, #111827 50%, #0d1a2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(79,195,247,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 20%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(224,64,251,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .report-tag {
+    display: inline-block;
+    background: rgba(79,195,247,0.1);
+    border: 1px solid rgba(79,195,247,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .header h1 span { color: var(--accent); }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-label { font-size: 10px; color: var(--text2); letter-spacing: 0.1em; text-transform: uppercase; }
+  .meta-value { font-size: 15px; font-weight: 500; }
+  .meta-value.price { color: var(--accent); font-size: 22px; font-weight: 700; }
+  .meta-value.down { color: var(--red); }
+  .divider { width: 1px; background: var(--border); }
+
+  /* ── Verdict Banner ── */
+  .verdict-banner {
+    margin: 0;
+    background: linear-gradient(90deg, rgba(79,195,247,0.06) 0%, rgba(224,64,251,0.04) 100%);
+    border-left: 4px solid var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .verdict-label { font-size: 11px; color: var(--text2); letter-spacing: 0.1em; text-transform: uppercase; }
+  .verdict-text { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--yellow); }
+  .verdict-badge {
+    margin-left: auto;
+    background: rgba(102,187,106,0.12);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 18px;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 1000px; margin: 0 auto; padding: 36px 40px; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* ── KPI Grid ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .kpi-card.up::after { background: linear-gradient(90deg, var(--green), transparent); }
+  .kpi-card.accent::after { background: linear-gradient(90deg, var(--accent), transparent); }
+  .kpi-card.warn::after { background: linear-gradient(90deg, var(--yellow), transparent); }
+  .kpi-card.down::after { background: linear-gradient(90deg, var(--red), transparent); }
+
+  .kpi-label { font-size: 11px; color: var(--text2); letter-spacing: 0.06em; margin-bottom: 8px; }
+  .kpi-value { font-size: 24px; font-weight: 700; line-height: 1; }
+  .kpi-value.up { color: var(--green); }
+  .kpi-value.warn { color: var(--yellow); }
+  .kpi-value.down { color: var(--red); }
+  .kpi-value.neutral { color: var(--text); }
+  .kpi-sub { font-size: 11px; color: var(--text2); margin-top: 6px; }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text2);
+    font-weight: 500;
+    padding: 10px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(37,42,56,0.5);
+    font-size: 13px;
+  }
+  tr:hover td { background: rgba(79,195,247,0.02); }
+  .tg-right { text-align: right; font-variant-numeric: tabular-nums; }
+  .tg-up { color: var(--green); font-weight: 500; }
+  .tg-down { color: var(--red); font-weight: 500; }
+  .tg-neutral { color: var(--text2); }
+  .tg-accent { color: var(--accent); font-weight: 600; }
+
+  /* ── Inline tags ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .badge-buy { background: rgba(102,187,106,0.15); color: var(--green); border: 1px solid rgba(102,187,106,0.3); }
+  .badge-hold { background: rgba(255,213,79,0.1); color: var(--yellow); border: 1px solid rgba(255,213,79,0.3); }
+  .badge-sell { background: rgba(239,83,80,0.1); color: var(--red); border: 1px solid rgba(239,83,80,0.3); }
+
+  /* ── Risk / Opportunity cards ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  .risk-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+  }
+  .risk-card h4 {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .risk-card h4.opp { color: var(--green); }
+  .risk-card h4.risk { color: var(--red); }
+  .risk-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .risk-card li {
+    font-size: 13px;
+    color: var(--text2);
+    padding-left: 16px;
+    position: relative;
+  }
+  .risk-card li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+  .risk-card.opp li::before { color: var(--green); }
+  .risk-card.risk li::before { color: var(--red); }
+
+  /* ── Analyst bar ── */
+  .analyst-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .analyst-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .bar-track {
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    gap: 2px;
+  }
+  .bar-seg { height: 100%; border-radius: 4px; }
+
+  /* ── Conclusion box ── */
+  .conclusion {
+    background: linear-gradient(135deg, rgba(79,195,247,0.06), rgba(224,64,251,0.04));
+    border: 1px solid rgba(79,195,247,0.2);
+    border-radius: 8px;
+    padding: 28px 32px;
+  }
+  .conclusion-verdict {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 16px;
+  }
+  .conclusion p { color: var(--text2); font-size: 13px; margin-bottom: 10px; line-height: 1.9; }
+
+  /* ── Disclaimer ── */
+  .disclaimer {
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    padding-top: 20px;
+    font-size: 11px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="report-tag">Investment Research Report</div>
+  <h1>キオクシアホールディングス <span>285A</span></h1>
+  <div style="color:var(--text2);font-size:13px;margin-top:4px;">NAND型フラッシュメモリ最大手 ／ 東証プライム ／ 電気機器</div>
+
+  <div class="header-meta">
+    <div class="meta-item">
+      <span class="meta-label">株価（5/15終値）</span>
+      <span class="meta-value price">44,450円</span>
+    </div>
+    <div class="divider"></div>
+    <div class="meta-item">
+      <span class="meta-label">前日比</span>
+      <span class="meta-value down">▼4,010円（-8.27%）</span>
+    </div>
+    <div class="divider"></div>
+    <div class="meta-item">
+      <span class="meta-label">時価総額</span>
+      <span class="meta-value">約24.3兆円（業界4位）</span>
+    </div>
+    <div class="divider"></div>
+    <div class="meta-item">
+      <span class="meta-label">レポート作成日</span>
+      <span class="meta-value">2026年5月15日</span>
+    </div>
+  </div>
+</div>
+
+<!-- Verdict Banner -->
+<div class="verdict-banner">
+  <div>
+    <div class="verdict-label">かぶまる 総合判断</div>
+    <div class="verdict-text">⚡ 超強力な業績・ただし高バリュエーションと循環リスクを踏まえ「分割買い・様子見」推奨</div>
+  </div>
+  <span class="verdict-badge">CONDITIONAL BUY</span>
+</div>
+
+<div class="container">
+
+  <!-- ── 1. 会社概要 ── -->
+  <div class="section">
+    <div class="section-title">01 ／ 会社概要</div>
+    <div class="kpi-grid">
+      <div class="kpi-card accent">
+        <div class="kpi-label">事業内容</div>
+        <div class="kpi-value neutral" style="font-size:16px;">NANDフラッシュメモリ</div>
+        <div class="kpi-sub">SSD・組み込みメモリ等</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="kpi-label">IPO</div>
+        <div class="kpi-value neutral" style="font-size:16px;">2024年12月</div>
+        <div class="kpi-sub">公募価格1,455円→現在44,450円</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="kpi-label">主要パートナー</div>
+        <div class="kpi-value neutral" style="font-size:16px;">SanDisk（WDC）</div>
+        <div class="kpi-sub">四日市工場合弁・生産能力の約80%共有</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="kpi-label">世界シェア</div>
+        <div class="kpi-value neutral" style="font-size:16px;">NAND 2位</div>
+        <div class="kpi-sub">Samsung・SKハイニックスと3強</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.9;">東芝のメモリ事業を前身とし、2019年に「キオクシア」として独立。BiCS FLASH（3D NAND）を独自開発し、AIデータセンター向けSSDで急拡大中。2024年12月に満を持して東証プライムへ上場したが、当初は公募割れスタート。その後AI半導体ブームを受けてV字回復し、上場から約1年半で時価総額約30倍という異次元の上昇を記録した。</p>
+  </div>
+
+  <!-- ── 2. 2026年3月期 決算ハイライト ── -->
+  <div class="section">
+    <div class="section-title">02 ／ 2026年3月期 通期決算（2026年5月15日発表）</div>
+    <div class="kpi-grid">
+      <div class="kpi-card up">
+        <div class="kpi-label">売上収益</div>
+        <div class="kpi-value up">2兆3,376億円</div>
+        <div class="kpi-sub">前期比 +37.0%（初の2兆円超）</div>
+      </div>
+      <div class="kpi-card up">
+        <div class="kpi-label">営業利益</div>
+        <div class="kpi-value up">8,704億円</div>
+        <div class="kpi-sub">前期比 +92.7%（ほぼ倍増）</div>
+      </div>
+      <div class="kpi-card up">
+        <div class="kpi-label">EPS（1株利益）</div>
+        <div class="kpi-value up">1,033円</div>
+        <div class="kpi-sub">前期比 約2倍超</div>
+      </div>
+      <div class="kpi-card up">
+        <div class="kpi-label">自己資本比率</div>
+        <div class="kpi-value up">37.9%</div>
+        <div class="kpi-sub">財務体質が大幅改善</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th class="tg-right">2025年3月期（前期）</th>
+            <th class="tg-right">2026年3月期（今期）</th>
+            <th class="tg-right">前期比</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>売上収益</td>
+            <td class="tg-right tg-neutral">1兆7,055億円</td>
+            <td class="tg-right tg-accent">2兆3,376億円</td>
+            <td class="tg-right tg-up">+37.0%</td>
+          </tr>
+          <tr>
+            <td>営業利益（IFRS）</td>
+            <td class="tg-right tg-neutral">4,516億円</td>
+            <td class="tg-right tg-accent">8,704億円</td>
+            <td class="tg-right tg-up">+92.7%</td>
+          </tr>
+          <tr>
+            <td>Non-GAAP営業利益</td>
+            <td class="tg-right tg-neutral">4,527億円</td>
+            <td class="tg-right tg-accent">8,762億円</td>
+            <td class="tg-right tg-up">+93.4%</td>
+          </tr>
+          <tr>
+            <td>親会社帰属当期利益</td>
+            <td class="tg-right tg-neutral">約4,800億円</td>
+            <td class="tg-right tg-accent">約5,642億円</td>
+            <td class="tg-right tg-up">大幅増益</td>
+          </tr>
+          <tr>
+            <td>年間配当</td>
+            <td class="tg-right tg-neutral">0円</td>
+            <td class="tg-right tg-neutral">0円</td>
+            <td class="tg-right tg-neutral">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px 24px;margin-bottom:12px;">
+      <div style="font-size:12px;color:var(--accent);font-weight:600;letter-spacing:0.06em;margin-bottom:10px;">📌 Q4単体（2026年1-3月）の異次元ぶり</div>
+      <div class="kpi-grid" style="margin-bottom:0;">
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Q4売上</div>
+          <div style="font-size:20px;font-weight:700;color:var(--green);">1兆29億円</div>
+          <div style="font-size:11px;color:var(--text2);">前四半期比 約2倍</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Q4営業利益</div>
+          <div style="font-size:20px;font-weight:700;color:var(--green);">5,991億円</div>
+          <div style="font-size:11px;color:var(--text2);">前四半期比 約4倍</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Q4営業利益率</div>
+          <div style="font-size:20px;font-weight:700;color:var(--green);">60%</div>
+          <div style="font-size:11px;color:var(--text2);">半導体史上屈指の高マージン</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. なぜこんなに良い決算なのか ── -->
+  <div class="section">
+    <div class="section-title">03 ／ なぜこんなに良い決算なのか？3つの理由</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
+      <div class="risk-card opp">
+        <h4 class="opp">① AI需要の爆発的拡大</h4>
+        <ul>
+          <li>ChatGPT・Claude等の生成AIが世界中で普及</li>
+          <li>AI推論サーバー向けSSDが爆発的需要</li>
+          <li>データセンター各社がストレージ投資を急拡大</li>
+          <li>太田社長「AI需要の大きな潮流に乗り、記録的増収増益」</li>
+        </ul>
+      </div>
+      <div class="risk-card opp">
+        <h4 class="opp">② NAND価格の急騰</h4>
+        <ul>
+          <li>供給不足を背景に販売単価（ASP）が大幅上昇</li>
+          <li>SanDiskの業績も+645%という爆発的回復</li>
+          <li>サムスン・SKハイニックスとの寡占市場で恩恵</li>
+          <li>すべてのアプリで単価・数量ともに増加</li>
+        </ul>
+      </div>
+      <div class="risk-card opp">
+        <h4 class="opp">③ 財務・資本構造の改善</h4>
+        <ul>
+          <li>2025年7月に優先株約1.6兆円を消却・単純化</li>
+          <li>普通株主への利益帰属性が向上</li>
+          <li>現金同等物が前期末比+180%の4,707億円</li>
+          <li>営業CFも前期比+29%の6,165億円を確保</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. Q1（2027年3月期）ガイダンス ── -->
+  <div class="section">
+    <div class="section-title">04 ／ 来期Q1（4-6月）ガイダンス — さらに衝撃的な数字</div>
+    <div class="kpi-grid">
+      <div class="kpi-card up">
+        <div class="kpi-label">売上収益（Q1予想）</div>
+        <div class="kpi-value up">1兆7,500億円</div>
+        <div class="kpi-sub">前四半期比 +74.5%</div>
+      </div>
+      <div class="kpi-card up">
+        <div class="kpi-label">営業利益（Q1予想）</div>
+        <div class="kpi-value up">1兆2,980億円</div>
+        <div class="kpi-sub">前四半期比 +117.5%</div>
+      </div>
+      <div class="kpi-card up">
+        <div class="kpi-label">Q1営業利益率</div>
+        <div class="kpi-value up">74.3%</div>
+        <div class="kpi-sub">売上の3/4が利益に</div>
+      </div>
+      <div class="kpi-card up">
+        <div class="kpi-label">Q1純利益（予想）</div>
+        <div class="kpi-value up">8,690億円</div>
+        <div class="kpi-sub">前年同期比 約48倍(!)</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,213,79,0.06);border:1px solid rgba(255,213,79,0.2);border-radius:6px;padding:16px 20px;font-size:13px;color:var(--text2);">
+      💡 <strong style="color:var(--yellow);">Q1の3ヶ月分の営業利益（1.3兆円）だけで、前通期（8,762億円）を大幅に超える見通し。</strong> これは半導体メモリ業界の常識を覆す数字であり、日本企業としてはトヨタに次ぐQ1利益水準になる可能性がある。為替前提はドル円159円。1円変動で売上100億円・営業利益90億円の感応度。
+    </div>
+  </div>
+
+  <!-- ── 5. バリュエーション ── -->
+  <div class="section">
+    <div class="section-title">05 ／ バリュエーション（株価44,450円基準）</div>
+    <div class="kpi-grid">
+      <div class="kpi-card warn">
+        <div class="kpi-label">実績PER（2026年3月期）</div>
+        <div class="kpi-value warn">約47倍</div>
+        <div class="kpi-sub">EPS 1,033円ベース</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="kpi-label">Q1年率換算PER（参考）</div>
+        <div class="kpi-value neutral" style="font-size:18px;">約8〜9倍</div>
+        <div class="kpi-sub">Q1ガイダンスを4倍換算した場合</div>
+      </div>
+      <div class="kpi-card warn">
+        <div class="kpi-label">PBR</div>
+        <div class="kpi-value warn">約21倍</div>
+        <div class="kpi-sub">高水準だが1年前の36倍から改善</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="kpi-label">アナリスト平均目標株価</div>
+        <div class="kpi-value neutral" style="font-size:18px;">40,936円</div>
+        <div class="kpi-sub">現株価比 約▲8%（5/15時点）</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px 24px;">
+      <p style="font-size:13px;color:var(--text2);line-height:1.9;">
+        <strong style="color:var(--text);">「47倍」と「8倍」の間のどこが正しいか？</strong><br>
+        これが今のキオクシア投資の本質的な問いです。実績PERは47倍とやや割高だが、Q1ガイダンスを年率換算すると8〜9倍という驚異的な割安水準になる。この差を埋めるのは「NANDメモリ価格がいつまでこの高水準を維持できるか」に尽きます。メモリはシクリカル（景気循環型）産業であり、過去には1〜2ヶ月でスポット価格が▲20〜30%下落した事例もある点は注意が必要です。
+      </p>
+    </div>
+  </div>
+
+  <!-- ── 6. アナリスト評価 ── -->
+  <div class="section">
+    <div class="section-title">06 ／ アナリスト・機関投資家の動向</div>
+
+    <div class="analyst-bar">
+      <div class="analyst-bar-label">
+        <span>アナリストコンセンサス（2026年5月15日時点、計14人）</span>
+        <span style="color:var(--green);">買い優勢</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-seg" style="width:43%;background:var(--green);"></div>
+        <div class="bar-seg" style="width:36%;background:rgba(102,187,106,0.4);"></div>
+        <div class="bar-seg" style="width:7%;background:var(--text2);"></div>
+        <div class="bar-seg" style="width:14%;background:var(--red);"></div>
+      </div>
+      <div style="display:flex;gap:20px;margin-top:10px;flex-wrap:wrap;">
+        <span style="font-size:12px;color:var(--green);">■ 強気買い：6人</span>
+        <span style="font-size:12px;color:rgba(102,187,106,0.7);">■ 買い：5人</span>
+        <span style="font-size:12px;color:var(--text2);">■ 中立：1人</span>
+        <span style="font-size:12px;color:var(--red);">■ 売り：2人</span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>主体</th>
+          <th>動向・コメント</th>
+          <th class="tg-right">評価</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>アナリスト平均目標株価</td>
+          <td>40,936円（5/15時点）。決算後の上方修正フォローが相次ぐ見込み</td>
+          <td class="tg-right"><span class="badge badge-hold">HOLD方向</span></td>
+        </tr>
+        <tr>
+          <td>BCPE Pangea Cayman（Bain系PE）</td>
+          <td>筆頭株主として保有割合を段階的に縮小中（変更報告書多数）。株式売出し圧力は継続中</td>
+          <td class="tg-right"><span class="badge badge-sell">要注意</span></td>
+        </tr>
+        <tr>
+          <td>ゴールドマン・サックス</td>
+          <td>保有割合が5%未満に減少と報告。売買を繰り返している可能性</td>
+          <td class="tg-right"><span class="badge badge-hold">中立</span></td>
+        </tr>
+        <tr>
+          <td>外資系資金全般</td>
+          <td>日本株急騰の牽引役。AI・半導体関連への海外マネー流入継続。14日に売買代金2兆円超（単一銘柄初）</td>
+          <td class="tg-right"><span class="badge badge-buy">買い越し</span></td>
+        </tr>
+        <tr>
+          <td>三菱UFJモルガン・スタンレー</td>
+          <td>「株高に乗り遅れまいとする焦りが個人買いを誘った」と分析。上昇の一因を解説</td>
+          <td class="tg-right"><span class="badge badge-hold">観察中</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 7. リスクと機会 ── -->
+  <div class="section">
+    <div class="section-title">07 ／ 投資機会とリスク要因</div>
+    <div class="two-col">
+      <div class="risk-card opp">
+        <h4 class="opp">📈 アップサイド（強気の根拠）</h4>
+        <ul>
+          <li>AI需要は中長期で構造的に拡大継続の見通し</li>
+          <li>Q1営業利益1.3兆円が実現すれば実績PERが急速に低下</li>
+          <li>6月のInvestor Dayで配当・自社株買い発表の可能性</li>
+          <li>SanDiskとの合弁延長で安定収益（複数年分を前受け）</li>
+          <li>日経225銘柄のためETF買い・インデックス資金が常時流入</li>
+          <li>IPO公募価格1,455円からの圧倒的な上昇余力の実績</li>
+        </ul>
+      </div>
+      <div class="risk-card risk">
+        <h4 class="risk">📉 ダウンサイド（弱気の根拠）</h4>
+        <ul>
+          <li>メモリ価格は景気循環型で過去に急落事例が多数</li>
+          <li>BCPE Pangea等の大株主による継続的な売り出し圧力</li>
+          <li>現在の株価水準はQ1以降の高成長継続を前提</li>
+          <li>PBR約21倍は純資産比で依然割高な水準</li>
+          <li>米中貿易摩擦・半導体輸出規制のリスク</li>
+          <li>配当ゼロで株主還元なし（インカム投資家には不向き）</li>
+          <li>ボラティリティが高く「ジェットコースター銘柄」と呼ばれる</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 8. 業績持続性のモニタリング指標 ── -->
+  <div class="section">
+    <div class="section-title">08 ／ 業績持続性のモニタリング指標（KPI）と確認先</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px 24px;">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">
+        現在の株価は「高水準の利益率が今後も維持されること」をある程度織り込んでいます。好業績の持続性を判断し、適切な売買タイミングを図るためには、以下の3つの指標（KPI）を定期的にチェックすることが重要です。
+      </p>
+      
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <!-- KPI 1 -->
+        <div style="border-left:3px solid var(--accent);padding-left:16px;">
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">① NANDスポット価格の月次推移</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:6px;">
+            キオクシアの利益に直結する最も重要な指標です。スポット価格が下落に転じた場合は業績悪化の先行シグナルとなります。
+          </div>
+          <div style="font-size:12px;background:rgba(255,255,255,0.05);padding:8px 12px;border-radius:4px;color:var(--accent);">
+            <strong>🔍 どこで確認するか：</strong><br>
+            ・<a href="https://www.dramexchange.com/" target="_blank" style="color:inherit;text-decoration:underline;">DRAMeXchange（TrendForce社）のWebサイト</a><br>
+            ・日本経済新聞の「市況」面や「半導体メモリ」関連ニュース<br>
+            ・台湾メディア（DigiTimesなど）の市況レポート
+          </div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div style="border-left:3px solid var(--green);padding-left:16px;">
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">② 協業・競合他社の決算（四半期ごと）</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:6px;">
+            キオクシアと同じ市場環境で戦う他社の業績が強力な先行指標になります。
+          </div>
+          <div style="font-size:12px;background:rgba(255,255,255,0.05);padding:8px 12px;border-radius:4px;color:var(--green);">
+            <strong>🔍 どこで確認するか：</strong><br>
+            ・Western Digital（SanDiskの親会社）：<a href="https://investor.wdc.com/" target="_blank" style="color:inherit;text-decoration:underline;">同社IRサイト（四半期決算資料）</a><br>
+            ・SKハイニックス：<a href="https://www.skhynix.com/ir/" target="_blank" style="color:inherit;text-decoration:underline;">IRサイト</a> ／ サムスン電子：<a href="https://www.samsung.com/global/ir/" target="_blank" style="color:inherit;text-decoration:underline;">IRサイト</a><br>
+            ・BloombergやReuters等の決算サマリー記事
+          </div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div style="border-left:3px solid var(--yellow);padding-left:16px;">
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">③ 米ビッグテックのデータセンター投資額（CAPEX）</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:6px;">
+            AI向けSSD需要の根本的な源泉です。ビッグテックの投資意欲が衰えない限り、キオクシアへの追い風は継続します。
+          </div>
+          <div style="font-size:12px;background:rgba(255,255,255,0.05);padding:8px 12px;border-radius:4px;color:var(--yellow);">
+            <strong>🔍 どこで確認するか（各社のIRサイト）：</strong><br>
+            ・<a href="https://abc.xyz/investor/" target="_blank" style="color:inherit;text-decoration:underline;">Google (Alphabet)</a> ／ <a href="https://www.microsoft.com/en-us/investor/" target="_blank" style="color:inherit;text-decoration:underline;">Microsoft</a> ／ <a href="https://investor.fb.com/" target="_blank" style="color:inherit;text-decoration:underline;">Meta</a> ／ <a href="https://ir.aboutamazon.com/" target="_blank" style="color:inherit;text-decoration:underline;">Amazon</a><br>
+            ・各社の決算資料内にある「Capital Expenditures（資本的支出 / CAPEX）」の項目<br>
+            ・米国株専門のニュースサイトやインフルエンサーの決算速報
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 9. 結論 ── -->
+  <div class="section">
+    <div class="section-title">09 ／ かぶまる 総合判断・投資戦略</div>
+    <div class="conclusion">
+      <div class="conclusion-verdict">結論：「分割買い」で段階的にポジションを構築するスタンスが合理的</div>
+      <p>業績だけを見れば「異次元の強さ」は本物です。Q1ガイダンスの営業利益率74%は半導体業界の常識を覆す数字であり、AI需要の追い風は中長期で続く可能性が高い。</p>
+      <p>ただし株価は5/7〜14の1週間で+33%急騰した後の決算発表。「噂で買って事実で売る」の典型的な展開が起きやすく、5/15は実際に▲8%の下落。</p>
+      <p><strong style="color:var(--yellow);">短期（1〜3ヶ月）</strong>：今決算の好内容は「期待値がすでに高かった分」株価に織り込み済みの側面が強い。まずは様子見か少額の打診買いが無難。アナリスト平均目標株価（40,936円）は現株価を下回っており、上値余地は限定的。</p>
+      <p><strong style="color:var(--yellow);">中長期（6ヶ月〜1年）</strong>：6月のInvestor Dayで配当・自社株買いが発表されれば大きなカタリスト。Q2以降もNAND価格が高止まりすれば「実績PERが40倍台→20倍台」へと自然に低下し、割高感が解消される。その局面では積み増し好機となり得る。</p>
+      <p style="color:var(--red);font-size:12px;">※ 本レポートは情報提供目的のみであり、投資勧誘ではありません。投資判断はご自身の責任のもと行ってください。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="container">
+  <div class="disclaimer">
+    ⚠️ 本レポートは2026年5月15日時点の公開情報（決算短信・適時開示・報道・アナリストコンセンサス等）をもとに作成した情報提供資料です。特定の銘柄への投資を推奨するものではありません。株式投資には価格変動リスクがあり、投資元本が保証されるものではありません。最終的な投資判断はご自身の判断と責任のもとで行ってください。
+  </div>
+</div>
+
+</body>
+</html>

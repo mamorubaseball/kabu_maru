@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【半導体】SCREENホールディングス(7735)銘柄分析：PER23倍は割安か？足枷と買い時を解説</title>
+    <meta name="description" content="SCREENホールディングス(7735)の銘柄分析。圧倒的なシェアを持つ洗浄装置ビジネス of SCREENホールディングス(7735)の強みと、中国依存度などのリスクから生じるPERの足枷、さらには今後の買い時のチャート分析まで詳しく解説。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #080c14;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --color-accent: #3b82f6; /* Electric Blue */
+            --color-accent-rgb: 59, 130, 246;
+            --color-success: #10b981; /* Emerald */
+            --color-warning: #f59e0b; /* Amber */
+            --color-danger: #f43f5e; /* Rose */
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+            --font-display: 'Outfit', 'Noto Sans JP', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(8, 12, 20, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 999;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 24px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            font-size: 14px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            -webkit-text-fill-color: #3b82f6;
+        }
+
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            max-width: 1440px;
+            margin: 110px auto 40px;
+            padding: 0 40px;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 320px;
+            position: sticky;
+            top: 110px;
+            height: calc(100vh - 150px);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .sidebar h3 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toc-list li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-list li a:hover,
+        .toc-list li.active a {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+            border-left-color: var(--color-accent);
+            padding-left: 16px;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 900px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            padding: 48px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%231e293b"/><stop offset="100%" stop-color="%230f172a"/></linearGradient></defs><rect width="100%" height="100%" fill="url(%23g)"/><path d="M0,50 Q25,25 50,50 T100,50" fill="none" stroke="rgba(59,130,246,0.05)" stroke-width="2"/></svg>');
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            align-self: flex-start;
+            padding: 6px 14px;
+            border-radius: 99px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--color-success);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+            z-index: 1;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            z-index: 1;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Glassmorphism Section Card */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .content-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-num {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .section-content p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Quote box styling */
+        .quote-box {
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 4px solid var(--color-accent);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+
+        .quote-box p {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 17px;
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* Subsections for Strengths and Risks */
+        .subsection-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .strength-title {
+            color: var(--color-success);
+            border-bottom-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .risk-title {
+            color: var(--color-warning);
+            border-bottom-color: rgba(245, 158, 11, 0.2);
+        }
+
+        /* Point Grid / Items */
+        .points-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .point-item {
+            display: flex;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .point-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .point-badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 28px;
+            padding: 0 12px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--color-accent);
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .point-item p {
+            margin-bottom: 0;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* Disclaimer Styling */
+        .disclaimer-box {
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(244, 63, 94, 0.05);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+                padding: 0 24px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+            header {
+                padding: 0 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-banner {
+                padding: 32px;
+            }
+            .hero-title {
+                font-size: 28px;
+            }
+            .glass-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div id="progress" class="progress-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            KABUMARU <span>7735</span>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg> 目次 (Contents)</h3>
+                <ul class="toc-list" id="toc">
+                    <li><a href="#section-0">アバンタイトル（導入）</a></li>
+<li><a href="#section-1">かぶまる自己紹介</a></li>
+<li><a href="#section-2">背景・前提 ― なぜ今スクリンなのか</a></li>
+<li><a href="#section-3">銘柄分析①　なぜ株価が急上昇したのか</a></li>
+<li><a href="#section-4">銘柄分析②　PER23倍は割安なのか</a></li>
+<li><a href="#section-5">かぶまるの視点 ― 強みと注意点の整理</a></li>
+<li><a href="#section-6">まとめ ― 入るなら今か？</a></li>
+
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Hero Header -->
+            <div class="hero-banner">
+                <span class="hero-badge">銘柄徹底分析</span>
+                <h1 class="hero-title">SCREENホールディングス (7735)<br>PER23倍は割安なのか？足枷と買い時の真相</h1>
+                <div class="hero-meta">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        解説: かぶまる
+                    </span>
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        公開日: 2026年06月
+                    </span>
+                </div>
+            </div>
+
+            <!-- Generated Sections -->
+            
+        <section id="section-0" class="content-section glass-card">
+            <h2 class="section-title">
+                <span class="section-num">Chapter 01</span>
+                アバンタイトル（導入）
+            </h2>
+            <div class="section-content">
+                <p>最近こんな悩み、ありませんか？</p>
+<div class="quote-box"><p>「スクリンって株価めちゃくちゃ上がってるし、PER23倍は割安だと思う。だけど、なんで東京エレクトロンやアドバンテストみたいにPER50倍とかにならないの？何か落とし穴でもあるの？」</p></div>
+<p>こう感じている方もいらっしゃるかと思います.</p>
+<p>結論から言います。スクリンのPER23倍は、確かに割安です。でも、50倍にならないのには明確な理由、いわば『足枷（あしかせ）』があるからなんです。</p>
+<p>この動画では、なぜPERが上がらないのかという理由や、直近のチャートで起きている『窓埋め』の動き、そして今後入るべきタイミングまで全部ぶっちゃけて解説していきます。最後まで見てもらえれば、スクリンに対して自分なりの投資判断が下せるようになります。</p>
+
+            </div>
+        </section>
+        
+        <section id="section-1" class="content-section glass-card">
+            <h2 class="section-title">
+                <span class="section-num">Chapter 02</span>
+                かぶまる自己紹介
+            </h2>
+            <div class="section-content">
+                <p>皆さん、こんにちは。『かぶまる』です。</p>
+<p>このチャンネルは、「難しい株式投資を、丸っとわかりやすく」をコンセプトに、日本株や資産運用の話を僕の好き勝手に発信していくチャンネルです。</p>
+<p>このチャンネルを見れば、飲み会で女の子に「今、おすすめの銘柄ある？」って聞かれた時、「今の情勢的にはこの銘柄がいいかもね」ってスラスラ答えられるようになります。</p>
+<p>ということで、モテたい方は紙とペンを持ってから動画を視聴するようにしてください。</p>
+
+            </div>
+        </section>
+        
+        <section id="section-2" class="content-section glass-card">
+            <h2 class="section-title">
+                <span class="section-num">Chapter 03</span>
+                背景・前提 ― なぜ今スクリンなのか
+            </h2>
+            <div class="section-content">
+                <p>じゃあ本題に入りましょう。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">まず</span><p>「スクリンって何の会社？」ってところから。</p></div>
+</div>
+<p>正式名称はSCREENホールディングス、証券コード7735。本社は京都。もともと大日本スクリーン製造という名前で、印刷版を作る会社だったんですよ。でも今は完全に変身していて、売上の約八割が半導体製造装置事業です。</p>
+<p>半導体の製造って、ざっくりいうと「シリコンのウェハーに回路を焼き付けていく」作業なんです。で、その工程のなかで「洗浄」っていう工程がある。ウェハーを綺麗にする工程です。これ、めちゃくちゃ重要なんですよ。汚れが残ってたら回路の性能や歩留まりが下がる。半導体の品質が直接決まるプロセスです。</p>
+<p>スクリンはこの洗浄装置、世界シェア約四十五パーセント。圧倒的な首位です。枚葉式洗浄装置、バッチ式洗浄装置、スピンスクラバー、この三つの主要な洗浄装置カテゴリーで全部世界一位を取っています。</p>
+<p>これは飲み会で言うと「半導体の洗い屋さんで世界一位」ですね。</p>
+
+            </div>
+        </section>
+        
+        <section id="section-3" class="content-section glass-card">
+            <h2 class="section-title">
+                <span class="section-num">Chapter 04</span>
+                銘柄分析①　なぜ株価が急上昇したのか
+            </h2>
+            <div class="section-content">
+                <p>では、なぜ今年に入ってこんなに株価が上がっているのか。</p>
+<p>四つの理由があります。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">一つ目</span><p>来期の業績が過去最高益更新見通しになったこと。</p></div>
+</div>
+<p>二〇二六年三月期、今期の本決算は正直厳しかったです。売上高が六千五十七億円で前年比マイナス三パーセント、経常利益が一千二百四十三億円でマイナス約十パーセント。半導体メーカーの設備投資が一時的に冷えた影響です。中国でも二百億円規模のプロジェクト遅延が発生しました。</p>
+<p>でもね、来期は全然違う絵を描いている。二〇二七年三月期の会社予想は、売上高七千二百五十億円でプラス約二十パーセント。経常利益一千五百億円でプラス約二十一パーセント。しかも二期ぶりの過去最高益更新です。「業績の谷」を越えたと市場が判断した瞬間に、株価が動いたわけです。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">二つ目</span><p>AI投資の爆発的な拡大。</p></div>
+</div>
+<p>世界のAI関連支出、二〇二六年は前年比四十七パーセント増と言われています。AIって結局、半導体の塊じゃないですか。チャットGPTもGeminiも、動かしているのはGPUやHBMメモリという超高性能な半導体です。それを作るにはTSMCなどのファウンドリーが大規模な設備投資をする。経営陣の見立てでは二〇二六年にWFE市場、つまり半導体製造装置市場全体が二十から三十パーセント成長すると言っています。スクリンはその恩恵をダイレクトに受ける立場です。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">三つ目</span><p>株式分割。</p></div>
+</div>
+<p>二〇二六年四月に一株を二株に分割しました。分割前は二万円前後だったので、個人投資家が「高くて買えない」と感じていた人も多かったんです。分割後は一万円台。これが買いやすさを生んで、需要が増えました。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">四つ目</span><p>OLED向け装置の好調。半導体以外の事業でも、スマホや大型テレビのOLEDパネル製造向けの装置が伸びています。半導体が一時的に低迷しても他の事業が支えるという、多事業ポートフォリオの安定感が評価されています。</p></div>
+</div>
+
+            </div>
+        </section>
+        
+        <section id="section-4" class="content-section glass-card">
+            <h2 class="section-title">
+                <span class="section-num">Chapter 05</span>
+                銘柄分析②　PER23倍は割安なのか
+            </h2>
+            <div class="section-content">
+                <p>じゃあPER二十三倍の話をしましょう。これが今回のメインテーマですよね。</p>
+<p>PERっていうのは「今の株価が一株あたりの利益の何年分に相当するか」という倍率です。低いほど割安、高いほど割高と言われる。</p>
+<p>スクリンの今の予想PERは来期ベースで約二十三倍です。これを同じ半導体装置業界と比べてみると、東京エレクトロンが約三十二倍、アドバンテストが約四十倍。海外でもASMLが約三十五倍前後。スクリンの二十三倍は、業界内では明らかに低い部類に入ります。</p>
+<div class="quote-box"><p>「じゃあ、みんなも割安だと思っているのに、なぜ東京エレクトロンやアドバンテストみたいにPER五十倍とかに跳ね上がらないのか？」</p></div>
+<p>ここ、めちゃくちゃ気になりますよね。みんなが知りたいのはそこだと思います。</p>
+<p>結論から言うと、スクリンのPERが五十倍とかにならないのには、主に二つの「足枷（あしかせ）」があるからです。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">一つ目</span><p>「洗浄装置」というビジネスに対する市場の評価です。</p></div>
+</div>
+<p>アドバンテストの検査装置やASMLの露光装置は、「代わりが絶対にきかない」レベルの超独占技術。それに対して、スクリンが得意とする「洗浄装置」は、いくら世界シェア四十五パーセントで圧倒的とはいえ、他社も参入しやすく、付加価値の面でやや低めに見られがちなんです。市場は「利益率や独占の強さ」において、東エレクやアドバンテストより一段低いプレミアムしか与えてくれない、というのが現実です。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">二つ目</span><p>先ほども触れた「中国依存度の高さ」です。</p></div>
+</div>
+<p>売上の約四十パーセントが中国向けというのは、半導体メーカーや競合と比べても突出して高い。米中摩擦や中国の独自規制といった地政学的リスクが常にちらつくため、機関投資家は「万が一の時のダメージが大きい」と判断して、株価にディスカウントをかけています。これが、PERが上がりにくい最大の原因です。</p>
+<p>つまり、PER二十三倍は確かに割安ですが、それは「中国リスク」と「洗浄装置の特性」という二つのディスカウントを織り込んだ上での数字なんです。</p>
+<p>ここ大事です。PERというのは「今の数字」だけでなく、こういった「ビジネスの構造的なリスクや期待値」のすべてを反映して決まるんです。</p>
+
+            </div>
+        </section>
+        
+        <section id="section-5" class="content-section glass-card">
+            <h2 class="section-title">
+                <span class="section-num">Chapter 06</span>
+                かぶまるの視点 ― 強みと注意点の整理
+            </h2>
+            <div class="section-content">
+                <p>じゃあ改めて、スクリンの強みとリスクを整理しておきましょう。</p>
+<h3 class="subsection-title strength-title"><span class="icon">✨</span>強み (Strengths)</h3>
+<p>洗浄装置でのシェア約四十五パーセントという技術的な堀は、簡単には崩れません。長年の顧客関係と製造ノウハウの積み上げがあるため、後発が追いつくには相当の時間がかかる。TSMC向けの売上比率が高く、世界最先端の半導体製造に必要不可欠な存在です。財務面も優秀で、自己資本比率六十二・七パーセント、ROE二十五パーセントという高い資本効率を誇っています。</p>
+<h3 class="subsection-title risk-title"><span class="icon">⚠️</span>注意点・リスク (Risks)</h3>
+<p>一番大きいのは中国リスクです。スクリンの売上の約四十パーセントは中国向けです。米中摩擦が激化して輸出規制が厳しくなると、ダメージが大きい。今期も中国でのプロジェクト遅延が出ました。</p>
+<div class="points-container">
+<div class="point-item"><span class="point-badge">二つ目</span><p>半導体投資サイクルの波。今期がその実例ですが、半導体メーカーが設備投資を絞ると業績が一気に落ちます。景気後退局面ではハイリスクになりやすいセクターです。</p></div>
+<div class="point-item"><span class="point-badge">三つ目</span><p>為替です。売上の大半が海外なので、円高が進むと業績の下押しになります。日銀の利上げ加速シナリオが現実になると、逆風になりうる。</p></div>
+</div>
+<p>アナリストのコンセンサス目標株価は約一万二千七百九十円。現在の株価に対して約十三パーセント以上の上昇余地があるという評価です。一方で強気から弱気まで見方が分かれていて、弱気派の目標は九千五百円という水準もある。それだけ不確実性が高い銘柄であるということも頭に入れておきたいです。</p>
+
+            </div>
+        </section>
+        
+        <section id="section-6" class="content-section glass-card">
+            <h2 class="section-title">
+                <span class="section-num">Chapter 07</span>
+                まとめ ― 入るなら今か？
+            </h2>
+            <div class="section-content">
+                <p>まとめましょう。</p>
+<p>スクリン、PER二十三倍は割高ではありません。同業比較でも割安感があり、来期過去最高益更新見通し、AI半導体需要の追い風、株式分割後の流動性向上と、株価上昇の理由はちゃんとあります。</p>
+<p>ただ、なぜPER五十倍とかにならないのか、その裏には「中国リスク」や「洗浄装置の参入障壁に対する市場の見方」といった理由があることも理解しておく必要があります。</p>
+<p>その上で、直近のチャート分析をしてみましょう。</p>
+<p>ここ最近の動きを見ると、株価は一万一千円から一万三千円まで一気に跳ね上がりましたよね。で、そこから今はちょっとずつ下がってきています。</p>
+<p>これね、テクニカル的には「窓を埋めている状態」なんです。</p>
+<p>急騰した時にチャート上にできた「隙間（窓）」を、株価がじわじわ下がることで埋めにいっている。この「窓埋め」というのは、上昇トレンド中の健全な調整であることが多く、窓をきれいに埋めきったタイミングは、絶好の押し目買いチャンスになりやすいです。</p>
+<p>ですので、一括で今すぐ突っ込むというよりは、この「窓埋め」の動きがどこで落ち着くか、チャートのサポートラインを見極めながら、少しずつ買い下がっていくアプローチが非常に有効だと思います。</p>
+<p>いつ入るかより、どう入るかを考えるのが大事。これが僕の結論です。</p>
+<p>あなたはスクリンどう思いますか？入り時だと思う？それともまだ様子見？コメントで教えてください。もし皆さんが注目している半導体関連銘柄があれば、ぜひそちらも教えてもらえると嬉しいです。次の動画の参考にします。</p>
+<p>今日はSCREENホールディングス、証券コード七七三五を深掘りしました。</p>
+<p>【免責事項】本動画は情報提供を目的としたものであり、特定の有価証券の売買を推奨するものではありません。投資の最終判断は自己責任でお願いします。</p>
+
+            </div>
+        </section>
+        
+
+            <!-- Disclaimer -->
+            <div class="disclaimer-box">
+                <strong>【免責事項】</strong> 本コンテンツは情報提供を目的としたものであり、特定の有価証券の売買を推奨するものではありません。投資の最終判断は自己責任でお願いします。
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 KABUMARU. All rights reserved.
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Progress Bar & Scroll Progress
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+
+        // IntersectionObserver for Fade-in Animations
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Update Active TOC
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.toc-list li').forEach(li => {
+                        li.classList.remove('active');
+                        const link = li.querySelector('a');
+                        if (link && link.getAttribute('href') === '#' + id) {
+                            li.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
